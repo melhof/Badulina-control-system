@@ -1,4 +1,4 @@
-
+#! /usr/bin/python3
 from time import sleep
 from widgetlords.pi_spi_din import *
 

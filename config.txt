@@ -1,0 +1,34 @@
+dtparam=spi=on
+dtparam=i2c_arm=on
+
+max_usb_current=1
+
+# Enable audio (loads snd_bcm2835)
+dtparam=audio=on
+
+# Screen reset to default (very annoying!)
+#dtoverlay=vc4-kms-v3d
+
+# Display specificaitons for VNC viewer on larger screen
+framebuffer_with=1280
+framebuffer_height=720
+hdmi_force_hotplug=1
+hdmi_group=2
+hdmi_mode=85
+disable_overscan=1
+gpu_mem=256
+
+# Specific Waveshare 7" display specifications from the factory
+#max_usb_current=1
+#hdmi_group=2
+#hdmi_mode=87
+#hdmi_cvt 800 480 60 6 0 0 0
+#hdmi_drive=1
+
+
+# Enable i2c real-time clock
+dtoverlay=i2c-rtc,mcp7940x 
+enable_uart=0
+
+# pi-spi-din settings for wigitlords
+dtoverlay=vpe-2701c
