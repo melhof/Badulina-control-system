@@ -1,0 +1,15 @@
+
+access logins:
+	msg (fb/etc), github
+
+cfg devsetup:
+	vimrc, bashrc, pti?
+
+go back & read bookmarked pi automations
+
+create fn for valves
+
+created web: 
+	view
+	ctrl
+	scheduler, etc
