@@ -4,6 +4,7 @@ access logins:
 
 cfg devsetup:
 	vimrc, bashrc, pti?
+    pi as gitserver
 
 go back & read bookmarked pi automations
 
