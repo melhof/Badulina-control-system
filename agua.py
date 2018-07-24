@@ -7,9 +7,9 @@ from drivers import KMTronic, Mod4KO
 
 def tick(board):
     for idx in range(board.size):
-        board.on(elem)
-        time.sleep(1)
-        board.off(elem)
+        board.on(idx)
+        sleep(1)
+        board.off(idx)
 
 def main():
     kmt = KMTronic()

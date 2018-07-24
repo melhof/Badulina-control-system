@@ -31,4 +31,6 @@ dtoverlay=i2c-rtc,mcp7940x
 enable_uart=0
 
 # pi-spi-din settings for wigitlords
+dtoverlay=pi-spi
 dtoverlay=vpe-2701c
+
