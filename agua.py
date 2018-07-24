@@ -18,6 +18,13 @@ def main():
         tick(kmt)
         tick(mod4)
 
+def alloff():
+    kmt = KMTronic()
+    mod4 = Mod4KO()
+    for board in [kmt, mod4]:
+        for idx in range(board.size):
+            board.off(idx)
+
 
 if __name__ == '__main__':
     main()
