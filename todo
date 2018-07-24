@@ -6,8 +6,8 @@ access logins:
 cfg devsetup:
 	vimrc, bashrc, pti?
 
-
-go back & read bookmarked pi automations
+write rs485 driver
+run tick() via rs485
 
 create fn for valves
 
