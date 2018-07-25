@@ -16,7 +16,7 @@ def main():
         tick(kmt)
         tick(mod4ko)
 
-def alloff():
+def all_off():
     for board in [kmt, mod4ko]:
         board.reset()
 
