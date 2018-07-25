@@ -1,17 +1,10 @@
 
-
-access logins:
-	msg (fb/etc), github
-
-cfg devsetup:
-	vimrc, bashrc, pti?
-
-write rs485 driver
-run tick() via rs485
-
-create fn for valves
+refactor drivers
 
 created web: 
 	view
 	ctrl
 	scheduler, etc
+
+drivers for AI and DO
+
