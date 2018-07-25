@@ -28,7 +28,7 @@ gpu_mem=256
 
 # Enable i2c real-time clock
 dtoverlay=i2c-rtc,mcp7940x 
-enable_uart=0
+enable_uart=1
 
 # pi-spi-din settings for wigitlords
 dtoverlay=pi-spi

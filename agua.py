@@ -2,29 +2,23 @@
 
 from time import sleep
 
-from drivers import KMTronic, Mod4KO
+from drivers import kmt, mod4ko
 
 
 def tick(board):
     for idx in range(board.size):
-        board.on(idx)
+        board.turn_on(idx)
         sleep(1)
-        board.off(idx)
+        board.turn_off(idx)
 
 def main():
-    kmt = KMTronic()
-    mod4 = Mod4KO()
     while True:
         tick(kmt)
-        tick(mod4)
+        tick(mod4ko)
 
 def alloff():
-    kmt = KMTronic()
-    mod4 = Mod4KO()
-    for board in [kmt, mod4]:
-        for idx in range(board.size):
-            board.off(idx)
-
+    for board in [kmt, mod4ko]:
+        board.reset()
 
 if __name__ == '__main__':
     main()
