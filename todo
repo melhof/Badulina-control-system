@@ -4,4 +4,6 @@ created web:
 	ctrl
 	scheduler, etc
 
-drivers for AI and DO
+swap fn/ctrl?
+
+look into ht1622 pin for data ctrl
