@@ -53,8 +53,7 @@ def relays():
             value = value == 'True'
             relay = Relay.query.filter_by(board=board, idx=idx).one()
             if PI:
-                ...
-                #drivers[board].send(idx, value)
+                drivers[board].send(idx, value)
             else:
                 print('NOT PI: NO-OP')
             relay.is_on = value
