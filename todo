@@ -1,8 +1,12 @@
 
-created web: 
-	view
-	ctrl
+flask app:
+	view buttons for relay
+    update relays on button press
 	scheduler, etc
+
+fft for flow meter
+
+hook up to actual pump/valves
 
 swap fn/ctrl?
 
