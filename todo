@@ -1,7 +1,5 @@
 
 flask app:
-	view buttons for relay
-    update relays on button press
 	scheduler, etc
 
 fft for flow meter
