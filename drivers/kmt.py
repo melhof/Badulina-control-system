@@ -24,9 +24,23 @@ def send(idx, relay_on):
     rs = serial.Serial('/dev/ttyS0')
     GPIO.output(DIR_RS485, TX)
     time.sleep(DIR_DELAY) # let TX settle
-    cmd = bytearray([0xff, idx+1, relay_on])
+    cmd = bytearray([0xFF, idx+1, relay_on])
     rs.write(cmd)
     rs.close()
+    
+def status():
+    rs = serial.Serial('/dev/ttyS0')
+    GPIO.output(DIR_RS485, TX)
+    time.sleep(DIR_DELAY) # let TX settle
+    cmd = bytearray([0xFF, 0xA1, 0x00])
+    rs.write(cmd)
+    time.sleep(DIR_DELAY*10) # let TX settle
+    GPIO.output(DIR_RS485, RX)
+    stat = rs.read(1)
+    rs.close()
+    return stat
+    
+print(status())
 
 def turn_on(idx):
     send(idx, True)
