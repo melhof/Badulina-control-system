@@ -18,7 +18,7 @@ except:
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db' #TODO change
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
@@ -71,3 +71,9 @@ def relays():
             'relays': Relay.query.filter_by(board=driver).all(),
         })
     return render_template('relays.html', **context)
+
+def seed_db():
+    for driver in drivers:
+        for i in range(drivers[driver].size):
+            db.session.add(Relay(board=driver, idx=i, is_on=False))
+    db.session.commit()
