@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Webpage</title>
+</head>
+<body>
+    <h1>My Webpage</h1>
+    {{ name }}
+    <form class="container" method="post">
+      {% for board in boards %}
+      <ul>
+        {{ board.name }}
+        {% for relay in board.relays %}
+        <li>
+          <button name="{{relay.board}}: {{relay.idx}}" value="{{not relay.is_on}}">
+            {{relay.idx}}
+            {% if relay.is_on %}
+            On
+            {% else %}
+            Off
+            {% endif %}
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endfor %}
+    </form>
+</body>
+</html>
+

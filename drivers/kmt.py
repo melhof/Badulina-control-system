@@ -5,9 +5,10 @@ stat
 FF A1 00
 '''
 
-import RPi.GPIO as GPIO
 import time
 import serial
+
+import RPi.GPIO as GPIO
 
 DIR_RS485 = 25
 DIR_DELAY = 0.005
