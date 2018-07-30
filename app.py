@@ -1,25 +1,15 @@
 
+import os
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
-try:
-    from drivers import kmt, mod4ko
-    PI = True
-    drivers = {
-        'kmt': kmt,
-        'mod4ko': mod4ko,
-    }
-except:
-    PI = False
-    drivers = {
-        'kmt': None,
-        'mod4ko': None,
-    }
-
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db' #TODO change
+
+current_dir = os.getcwd()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/app.db'.format(current_dir)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
 db = SQLAlchemy(app)
 
 class Relay(db.Model):
@@ -30,6 +20,8 @@ class Relay(db.Model):
 
     def __repr__(self):
         return '<Relay: board:{} idx:{}>'.format(self.board, self.idx)
+
+from agua import drivers, set_relay # keep this line below app, db, Relay
 
 @app.route('/')
 def index():
@@ -51,14 +43,7 @@ def relays():
             board, idx = key.split(':')
             idx = int(idx)
             value = value == 'True'
-            relay = Relay.query.filter_by(board=board, idx=idx).one()
-            if PI:
-                drivers[board].send(idx, value)
-            else:
-                print('NOT PI: NO-OP')
-            relay.is_on = value
-            db.session.add(relay)
-            db.session.commit()
+            set_relay(board, idx, value)
 
     context = {
         'name': 'taylor',
@@ -70,9 +55,3 @@ def relays():
             'relays': Relay.query.filter_by(board=driver).all(),
         })
     return render_template('relays.html', **context)
-
-def seed_db():
-    for driver in drivers:
-        for i in range(drivers[driver].size):
-            db.session.add(Relay(board=driver, idx=i, is_on=False))
-    db.session.commit()

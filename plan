@@ -1,0 +1,22 @@
+
+phases
+    minimum viable product
+        scheduled pump control
+        scheduled valve control
+        manual control view for pump/valves
+    additional
+        data view for flow/pressure sensors
+        dynamic scheduling based on rain sensor or web data
+        multitank monitoring w/ dynamic scheduling
+        stats view to correlate aggregates w/ tree health/yield/etc 
+
+features
+    web page with current status and control buttons
+    web page with current schedule and schedule setting
+     
+operational requirements
+    pump and valves are distant from server
+    pump never runs with all valves closed
+    pump never runs while webserver is dead
+    if multiple users edit state or schedule: last write wins
+
