@@ -1,6 +1,6 @@
 
 phases
-    minimum viable product
+    minimum viable product (MVP)
         scheduled pump control
         scheduled valve control
         manual control view for pump/valves
@@ -11,13 +11,23 @@ phases
         stats view to correlate aggregates w/ tree health/yield/etc 
 
 features
-    web page with current status and control buttons
-    web page with current schedule and schedule setting
+    minimum viable product (MVP)
+	web page with current status and control buttons
+	web page with current schedule and schedule setting
+
+    additional
+	information user switch activation
+	statistics low ground water level sensor
+	statistics water flow total
+	statistics water flow to separate parts of the land
+	statistics rainsensor data
+
      
 operational requirements
     webserver always running whenever pi is on
     pump never runs while webserver is dead
     pump never runs with all valves closed
-    pump never runs for >1hr continuous, or >2hrs in any 4hr window
+    pump switches off when minimum (0,5l/s) flow is not detected within 30 seconds
+    manually activated pump standard never runs for >1hr
     pump and valves are distant from server
     if multiple users edit state or schedule: last write wins
