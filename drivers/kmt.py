@@ -4,7 +4,6 @@ import serial
 import RPi.GPIO as GPIO
 
 DIR_RS485 = 25
-#DIR_DELAY = 0.005
 RX, TX = 0,1
 
 size = 8

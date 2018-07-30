@@ -1,6 +1,8 @@
 
-flask app:
-	scheduler, etc
+
+app:
+    view as pump/valves instead of relays
+    scheduling
 
 fft for flow meter
 

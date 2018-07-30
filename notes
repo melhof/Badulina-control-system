@@ -1,7 +1,7 @@
 
 start webserver as daemon with:
 
-FLASK_APP=app.py flask run --host=0.0.0.0 &> app.log &
+flask run --host=0.0.0.0 &> app.log &
 
 turn off w/
 ps aux | grep flask

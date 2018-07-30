@@ -15,8 +15,9 @@ features
     web page with current schedule and schedule setting
      
 operational requirements
-    pump and valves are distant from server
-    pump never runs with all valves closed
+    webserver always running whenever pi is on
     pump never runs while webserver is dead
+    pump never runs with all valves closed
+    pump never runs for >1hr continuous, or >2hrs in any 4hr window
+    pump and valves are distant from server
     if multiple users edit state or schedule: last write wins
-
