@@ -1,13 +1,13 @@
 
-start webserver as daemon with:
+webserver is always running as systemd daemon
 
-flask run --host=0.0.0.0 &> app.log &
-
-turn off w/
-ps aux | grep flask
-
-eg:
-pi       13619 29.2  3.8  44008 29528 pts/1    S    15:49   0:03 /home/pi/agua/bin/python3 /home/pi/agua/bin/flask run --host=0.0.0.0
-
-then eg 
-kill 13619
+how I installed it:
+ssh pi
+cd agua
+sudo cp agua.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl start agua.service
+systemctl enable agua
+sudo reboot
+ssh pi
+systemctl status agua.service
