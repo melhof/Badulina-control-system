@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=pi
-ExecStart=/bin/bash -c "source agua/binactivate; ./agua/app.py"
+ExecStart=/home/pi/agua/systemd.sh
 Restart=always
 RemainAfterExit=yes
 
