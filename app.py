@@ -23,6 +23,7 @@ admin.add_view(ModelView(models.Relay, models.db.session))
 
 app.add_url_rule(rule='/', view_func=views.index)
 app.add_url_rule(rule='/relays/', view_func=views.relays, methods=('GET', 'POST'))
+app.add_url_rule(rule='/status/', view_func=views.status, methods=('GET', 'POST'))
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000)

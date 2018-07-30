@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>System Status</title>
+</head>
+<body>
+    <h1>System Status</h1>
+    {% if ERR %}
+    <div>NO PUMP WITH CLOSED VALVES!</div>
+    {% endif %}
+    <form class="container" method="post">
+      <button name="pump" value="{{not pump.is_on}}">Pump is {{'On' if pump.is_on else 'Off'}}</button>
+      <ul>
+      {% for valve in valves %}
+        <li>
+          <button name="valve:{{valve.idx}}" value="{{not valve.is_on}}">
+            Valve is {{'Open' if valve.is_on else 'Closed'}}
+          </button>
+        </li>
+      {% endfor %}
+      </ul>
+    </form>
+</body>
+</html>
+
