@@ -1,7 +1,6 @@
 
 
 app:
-    view as pump/valves instead of relays
     scheduling
     systemd process
 

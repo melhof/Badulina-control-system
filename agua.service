@@ -1,0 +1,12 @@
+[Unit]
+Description=Agua Webserver
+After=network.target
+
+[Service]
+User=pi
+ExecStart=/bin/bash -c "source agua/binactivate; ./agua/app.py"
+Restart=always
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
