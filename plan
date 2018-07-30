@@ -17,7 +17,7 @@ features
 
     additional
 	information user switch activation
-	statistics low ground water level sensor
+	statistics low ground water level sensor/auto pump switchoff
 	statistics water flow total
 	statistics water flow to separate parts of the land
 	statistics rainsensor data
