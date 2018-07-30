@@ -1,13 +1,16 @@
+#! bin/python
 
 import os
 
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
 
 current_dir = os.getcwd()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/app.db'.format(current_dir)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/db.sqlite'.format(current_dir)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
@@ -21,7 +24,10 @@ class Relay(db.Model):
     def __repr__(self):
         return '<Relay: board:{} idx:{}>'.format(self.board, self.idx)
 
-from agua import drivers, set_relay # keep this line below app, db, Relay
+admin = Admin(app, name='agua', template_mode='bootstrap3')
+admin.add_view(ModelView(Relay, db.session))
+
+#from agua import drivers, set_relay # keep this line below app, db, Relay
 
 @app.route('/')
 def index():
@@ -55,3 +61,6 @@ def relays():
             'relays': Relay.query.filter_by(board=driver).all(),
         })
     return render_template('relays.html', **context)
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', 5000)
