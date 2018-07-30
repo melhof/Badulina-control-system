@@ -12,15 +12,15 @@ phases
 
 features
     minimum viable product (MVP)
-	web page with current status and control buttons
-	web page with current schedule and schedule setting
+    web page with current status and control buttons
+    web page with current schedule and schedule setting
 
     additional
-	information user switch activation
-	statistics low ground water level sensor
-	statistics water flow total
-	statistics water flow to separate parts of the land
-	statistics rainsensor data
+    information user switch activation
+    statistics low ground water level sensor
+    statistics water flow total
+    statistics water flow to separate parts of the land
+    statistics rainsensor data
 
      
 operational requirements

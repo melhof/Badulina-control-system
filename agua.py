@@ -10,7 +10,7 @@ except:
     PI = False
     drivers = ['kmt', 'mod4ko']
 
-from app import Relay, db
+from models import Relay, db
 
 def set_relay(board, idx, value):
     relay = Relay.query.filter_by(board=board, idx=idx).one()
