@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>System Status</h1>
+    <div>Last Recorded water flow was <b>{{ last_flow.data }}</b> rotations/sec at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i></div>
     {% if ERR %}
     <div>NO PUMP WITH CLOSED VALVES!</div>
     {% endif %}

@@ -1,7 +1,8 @@
 
 from flask import render_template, request
+from sqlalchemy import desc
 
-from models import Relay
+from models import Relay, SensorReading
 from agua import (
     drivers,
     set_relay,
@@ -64,5 +65,6 @@ def status():
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
+        'last_flow': SensorReading.query.order_by(desc('time')).first(),
     })
     return render_template('status.html', **context)

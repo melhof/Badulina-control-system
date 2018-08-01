@@ -1,12 +1,17 @@
 
-
-app:
-    scheduling
-
 fft for flow meter
 
-hook up to actual pump/valves
+thoughts:
+    rebuild deploy venv
+    RQ vs celery
+    nodered
+        driver for rs485
+        stream combinator for multiple inputs
 
-swap fn/ctrl?
+app:
+    scheduling ui
+    task runner
 
-look into ht1622 pin for data ctrl
+research
+    swap fn/ctrl?
+    look into ht1622 pin for data ctrl

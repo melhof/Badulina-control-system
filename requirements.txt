@@ -9,3 +9,4 @@ Werkzeug==0.14.1
 pyserial==3.2.1
 RPi.GPIO==0.6.3
 Flask-Admin==1.5.1
+pytz==2018.5
