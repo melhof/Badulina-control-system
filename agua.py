@@ -3,9 +3,6 @@ import datetime
 import pytz
 import requests
 
-def now():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-
 try:
     from drivers import kmt, mod4ko, mod8di
     PI = True
@@ -17,8 +14,27 @@ except:
     PI = False
     drivers = ['kmt', 'mod4ko']
 
-from models import db, Relay, SensorReading 
+from models import db, Relay, SensorReading, WateringEvent
 
+def now():
+    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+
+def time_from_str(string):
+    return datetime.time(*map(int, string.split(':')))
+
+def add_schedule(day, start, stop, valves):
+    assert day in range(7), 'MUST BE A VALID DAY'
+    assert stop > start, 'START MUST PRECEDE STOP'
+    assert len(valves) > 0, 'AT LEAST ONE VALVE MUST BE OPEN'
+
+    event = WateringEvent.create(day, start, stop, valves)
+    db.session.add(event)
+    db.session.commit()
+
+def remove_schedule(id):
+    event = WateringEvent.query.get(id)
+    db.session.delete(event)
+    db.session.commit()
 
 def seed_db():
     drivers = [('kmt', 8), ('mod4ko', 4)]

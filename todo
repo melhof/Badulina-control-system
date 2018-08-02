@@ -3,7 +3,6 @@
 app:
     scheduling ui
     task runner
-    flow meter daemon
 
 thoughts:
     rebuild deploy venv

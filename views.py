@@ -2,8 +2,12 @@
 from flask import render_template, request
 from sqlalchemy import desc
 
-from models import Relay, SensorReading
+from models import Relay, SensorReading, WateringEvent
+
 from agua import (
+    time_from_str,
+    add_schedule,
+    remove_schedule,
     drivers,
     set_relay,
     turn_pump_on,
@@ -45,7 +49,6 @@ def relays():
 def status():
     context = {}
     if request.method == 'POST':
-        print(request.form)
         for key, value in request.form.items():
             value = value == 'True'
             try:
@@ -71,3 +74,33 @@ def status():
         'last_flow': SensorReading.query.order_by(desc('time')).first(),
     })
     return render_template('status.html', **context)
+
+def schedule():
+    context = {}
+    if request.method == 'POST':
+        form = request.form
+        print(form)
+        if 'delete' in form:
+            remove_schedule(int(form['delete']))
+        else:
+            day = int(request.form['day'])
+            start = time_from_str(form['start'])
+            stop = time_from_str(form['stop'])
+            valves = []
+
+            for key, value in form.items():
+                if value == 'on' and 'valve' in key:
+                    idx = int(key.split(':')[1])
+                    valves.append(idx)
+
+            try:
+                add_schedule(day, start, stop, valves)
+            except AssertionError as err:
+                context['ERR'] = True
+                context['ERRMSG'] = str(err)
+    events = sorted(WateringEvent.query.all(), key=lambda event: (event.day.value, event.start))
+    context.update({ 
+        'schema': WateringEvent,
+        'events': events,
+    })
+    return render_template('schedule.html', **context)
