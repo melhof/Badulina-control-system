@@ -69,6 +69,7 @@ def status():
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
-        'last_flow': water_flow,
+        'current_flow': water_flow,
+        'last_flow': SensorReading.query.order_by(desc('time')).first(),
     })
     return render_template('status.html', **context)
