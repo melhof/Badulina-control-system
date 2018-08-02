@@ -1,4 +1,5 @@
 
+import requests
 from flask import render_template, request
 from sqlalchemy import desc
 
@@ -62,9 +63,12 @@ def status():
             except AssertionError:
                 context['ERR'] = True
 
+    # get flow data from node-red
+    water_flow = requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
+
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
-        'last_flow': SensorReading.query.order_by(desc('time')).first(),
+        'last_flow': water_flow,
     })
     return render_template('status.html', **context)

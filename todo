@@ -1,17 +1,20 @@
 
 fft for flow meter
 
+
+app:
+    scheduling ui
+    task runner
+
 thoughts:
     rebuild deploy venv
     RQ vs celery
     nodered
         driver for rs485
         stream combinator for multiple inputs
-
-app:
-    scheduling ui
-    task runner
+        api to hit flow meter
 
 research
     swap fn/ctrl?
     look into ht1622 pin for data ctrl
+
