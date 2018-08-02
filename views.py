@@ -1,5 +1,4 @@
 
-import requests
 from flask import render_template, request
 from sqlalchemy import desc
 
@@ -11,6 +10,7 @@ from agua import (
     turn_pump_off,
     turn_valve_on,
     turn_valve_off,
+    current_flow_rate,
 )
 
 def index():
@@ -63,13 +63,11 @@ def status():
             except AssertionError:
                 context['ERR'] = True
 
-    # get flow data from node-red
-    water_flow = requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
 
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
-        'current_flow': water_flow,
+        'current_flow': current_flow_rate(),
         'last_flow': SensorReading.query.order_by(desc('time')).first(),
     })
     return render_template('status.html', **context)

@@ -1,2 +1,5 @@
 #! /bin/bash
-cd ~/agua; source bin/activate; ./app.py
+cd ~/agua
+source bin/activate
+./water_daemon.py &
+./app.py

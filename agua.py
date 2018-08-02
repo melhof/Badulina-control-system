@@ -1,6 +1,7 @@
 
 import datetime
 import pytz
+import requests
 
 def now():
     return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
@@ -40,15 +41,23 @@ def freq(signal, fs):
     else:
         return 0
 
-def get_flow_rate():
+def sample_flow_rate():
     channel = 0
     sample_hz = 300
     n_samples = 1000
     return freq(mod8di.build(channel, sample_hz, n_samples), sample_hz)
 
+def current_flow_rate():
+    return requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
+
 def record_flow_rate():
     time = now()
-    rate = get_flow_rate()
+
+    if PI:
+        rate = sample_flow_rate()
+    else:
+        rate = current_flow_rate()
+
     db.session.add(SensorReading(board='mod8di', idx=0, data=rate, time=time))
     db.session.commit()
     return
