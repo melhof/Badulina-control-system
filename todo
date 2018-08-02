@@ -1,6 +1,5 @@
 
-fft for flow meter
-
+flow meter freq
 
 app:
     scheduling ui
@@ -11,8 +10,6 @@ thoughts:
     RQ vs celery
     nodered
         driver for rs485
-        stream combinator for multiple inputs
-        api to hit flow meter
 
 research
     swap fn/ctrl?
