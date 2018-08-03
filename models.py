@@ -47,6 +47,7 @@ class WateringEvent(db.Model):
     start    = db.Column(db.Time, nullable=False)
     stop     = db.Column(db.Time, nullable=False)
     valves_  = db.Column(db.String(10), nullable=False)
+    in_progress = db.Column(db.Boolean, nullable=False)
 
     def __repr__(self):
         return '<WateringEvent: day:{} start:{} stop:{}>'.format(self.day, self.start, self.stop)
@@ -62,4 +63,5 @@ class WateringEvent(db.Model):
             start=start,
             stop=stop,
             valves_=''.join(map(str, valves)),
+            in_progress=False,
         )

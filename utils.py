@@ -6,7 +6,7 @@ import datetime
 import pytz
 
 def now():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    return datetime.datetime.now().replace(tzinfo=pytz.timezone('Europe/Madrid'))
 
 def time_from_str(string):
     return datetime.time(*map(int, string.split(':')))

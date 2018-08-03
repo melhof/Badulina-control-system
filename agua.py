@@ -43,6 +43,49 @@ def remove_schedule(id):
     db.session.delete(event)
     db.session.commit()
 
+def apply_schedule():
+    moment = now()
+    day = WateringEvent.Days(moment.weekday())
+    time = moment.time()
+
+    current_task = WateringEvent.query.filter(
+        WateringEvent.in_progress==True,
+    ).all()
+    
+    next_task = WateringEvent.query.filter(
+        WateringEvent.in_progress==False,
+        WateringEvent.day == day,
+        WateringEvent.start < time,
+        WateringEvent.stop > time,
+    ).all()
+
+    if current_task:
+        print(current_task)
+        assert len(current_task) == 1
+        current_task = current_task[0]
+
+        # be carefule w/ midnight behaviour
+        should_continue = current_task.day == day and current_task.stop > time
+        if not should_continue:
+            reset()
+            current_task.in_progress = False
+            db.session.commit()
+
+    if next_task:
+        reset() #this line should be redundant; for safety
+        print(next_task)
+        assert len(next_task) == 1
+        next_task = next_task[0]
+
+        next_task.in_progress = True
+        db.session.commit()
+        start_watering(next_task)
+
+def start_watering(event):
+    for valve in event.valves:
+        turn_valve_on(valve)
+    turn_pump_on()
+
 def seed_db():
     drivers = [('kmt', 8), ('mod4ko', 4)]
     for driver, size in drivers:
@@ -88,6 +131,7 @@ def reset():
         for driver in drivers.values():
             driver.reset()
     Relay.query.update(dict(is_on=False))
+    WateringEvent.query.update(dict(in_progress=False))
     db.session.commit()
 
 def turn_pump_on():

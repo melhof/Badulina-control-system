@@ -4,4 +4,5 @@
 cd ~/agua
 source bin/activate
 ./daemons/watering.py &
+./daemons/data_collector.py &
 ./app.py
