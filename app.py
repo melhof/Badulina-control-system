@@ -20,6 +20,7 @@ from models import db
 import views
 
 os.environ['FLASK_ENV'] = 'development' # trigger debug mode for webserver
+os.environ['WERKZEUG_DEBUG_PIN'] = 'off' # no security pin in web debugger
 current_dir = os.getcwd()
 
 app = Flask(__name__)

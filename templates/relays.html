@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Agua</title>
-</head>
-<body>
-    <h1>Agua</h1>
-    <form class="container" method="post">
-      {% for board in boards %}
-      <ul>
-        {{ board.name }}
-        {% for relay in board.relays %}
-        <li>
-          <button name="{{relay.board}}: {{relay.idx}}" value="{{not relay.is_on}}">
-            {{relay.idx}}
-            {% if relay.is_on %}
-            On
-            {% else %}
-            Off
-            {% endif %}
-          </button>
-        </li>
-        {% endfor %}
-      </ul>
+{% extends "base.html" %}
+{% block title %}Relays{% endblock %}
+{% block content %}
+  <h1>Relays</h1>
+  <form class="container" method="post">
+    {% for board in boards %}
+    <ul>
+      {{ board.name }}
+      {% for relay in board.relays %}
+      <li>
+        <button name="{{relay.board}}: {{relay.idx}}" value="{{not relay.is_on}}">
+          {{relay.idx}}
+          {% if relay.is_on %}
+          On
+          {% else %}
+          Off
+          {% endif %}
+        </button>
+      </li>
       {% endfor %}
-    </form>
-</body>
-</html>
-
+    </ul>
+    {% endfor %}
+  </form>
+{% endblock %}

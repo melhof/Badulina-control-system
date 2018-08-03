@@ -6,7 +6,7 @@ This module encapsulates domain logic:
 
 import requests
 
-from utils import now
+from utils import now, freq
 
 try:
     from drivers import kmt, mod4ko, mod8di
@@ -43,19 +43,6 @@ def seed_db():
     db.session.commit()
     return
 
-
-def offset(lst):
-    return zip(lst, lst[1:])
-
-def freq(signal, fs):
-    idx = [i for i, (a,b) in enumerate(offset(signal)) if (a,b) == (0,1)]
-    diff = [b-a for a,b in offset(idx)]
-    if diff:
-        mean = sum(diff) / len(diff)
-        return fs / mean
-    else:
-        return 0
-
 def sample_flow_rate():
     channel = 0
     sample_hz = 300
@@ -87,6 +74,13 @@ def set_relay(board, idx, value):
     db.session.add(relay)
     db.session.commit()
     return
+
+def reset():
+    if PI:
+        for driver in drivers.values():
+            driver.reset()
+    Relay.query.update(dict(is_on=False))
+    db.session.commit()
 
 def turn_pump_on():
     pump = Relay.query.filter_by(board='mod4ko', idx=0).one()

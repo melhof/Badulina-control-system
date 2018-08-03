@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>System Schedule</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}System Schedule{% endblock %}
+{% block content %}
     <h1>System Schedule</h1>
     <table >
         <thead>
@@ -89,5 +86,4 @@
     {% if ERR %}
       {{ERRMSG}}
     {% endif %}
-</body>
-</html>
+{% endblock %}
