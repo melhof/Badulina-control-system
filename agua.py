@@ -86,13 +86,6 @@ def start_watering(event):
         turn_valve_on(valve)
     turn_pump_on()
 
-def seed_db():
-    drivers = [('kmt', 8), ('mod4ko', 4)]
-    for driver, size in drivers:
-        for i in range(size):
-            db.session.add(Relay(board=driver, idx=i, is_on=False))
-    db.session.commit()
-    return
 
 def sample_flow_rate():
     channel = 0
@@ -176,4 +169,18 @@ def turn_valve_off(idx):
         valve.is_on = False
         db.session.add(valve)
         db.session.commit()
+    return
+
+import click
+from flask.cli import with_appcontext
+
+@click.command('init_db')
+@with_appcontext
+def init_db():
+    db.create_all()
+    drivers = [('kmt', 8), ('mod4ko', 4)]
+    for driver, size in drivers:
+        for i in range(size):
+            db.session.add(Relay(board=driver, idx=i, is_on=False))
+    db.session.commit()
     return

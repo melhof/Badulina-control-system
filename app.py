@@ -44,5 +44,8 @@ app.add_url_rule(rule='/relays/', view_func=views.relays, methods=('GET', 'POST'
 app.add_url_rule(rule='/status/', view_func=views.status, methods=('GET', 'POST'))
 app.add_url_rule(rule='/schedule/', view_func=views.schedule, methods=('GET', 'POST'))
 
+from agua import init_db 
+app.cli.add_command(init_db)
+
 if __name__ == '__main__':
     app.run('0.0.0.0', 5000) # run webserver
