@@ -93,7 +93,7 @@ def schedule():
         if 'delete' in form:
             remove_schedule(int(form['delete']))
         else:
-            day = int(request.form['day'])
+            day = WateringEvent.Days(int(request.form['day']))
             start = time_from_str(form['start'])
             stop = time_from_str(form['stop'])
             valves = []

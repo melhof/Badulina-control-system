@@ -58,7 +58,7 @@ class WateringEvent(db.Model):
     @classmethod
     def create(cls, day, start, stop, valves):
         return cls(
-            day=list(Days)[day],
+            day=day,
             start=start,
             stop=stop,
             valves_=''.join(map(str, valves)),

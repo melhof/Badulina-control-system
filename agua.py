@@ -22,9 +22,17 @@ except:
 from models import db, Relay, SensorReading, WateringEvent
 
 def add_schedule(day, start, stop, valves):
-    assert day in range(7), 'MUST BE A VALID DAY'
     assert stop > start, 'START MUST PRECEDE STOP'
     assert len(valves) > 0, 'AT LEAST ONE VALVE MUST BE OPEN'
+
+    potential_conflicts = WateringEvent.query.filter_by(day=day).all()
+    for event in potential_conflicts:
+        print(event)
+
+        if start < event.start:
+            assert stop < event.start, 'OVERLAP: STOP BEFORE {}'.format(event.start)
+        else:
+            assert start > event.stop, 'OVERLAP: START AFTER {}'.format(event.stop)
 
     event = WateringEvent.create(day, start, stop, valves)
     db.session.add(event)
