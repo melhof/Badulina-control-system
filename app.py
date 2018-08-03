@@ -1,4 +1,12 @@
 #! bin/python
+'''
+This module composites the other layers:
+    models
+    agua
+    views
+    templates
+to form a fully functioning web application
+'''
 
 import os
 

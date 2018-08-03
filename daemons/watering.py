@@ -1,7 +1,10 @@
 #! bin/python
+'''
+this script continuously feeds sensor readings into the DB
+'''
 
+# allow import parent dir:
 import os, sys
-# allow import parent dir
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import time

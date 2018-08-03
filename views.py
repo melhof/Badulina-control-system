@@ -1,11 +1,15 @@
-
+'''
+This module encapsulates webserver logic:
+    definition of urls 
+    encoding / decoding html and JSON data
+    preparing the context for rendering the appropriate template
+'''
 from flask import render_template, request
 from sqlalchemy import desc
 
+from utils import time_from_str
 from models import Relay, SensorReading, WateringEvent
-
 from agua import (
-    time_from_str,
     add_schedule,
     remove_schedule,
     drivers,

@@ -1,4 +1,10 @@
-
+'''
+This module encapsulates database logic:
+    creating tables
+    inserting rows
+    deleing rows
+    querying rows
+'''
 import enum
 from flask_sqlalchemy import SQLAlchemy
 

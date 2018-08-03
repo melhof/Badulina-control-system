@@ -1,7 +1,12 @@
+'''
+This module encapsulates domain logic:
+    safety restraints
+    knowledge about irrigation hardware configuration
+'''
 
-import datetime
-import pytz
 import requests
+
+from utils import now
 
 try:
     from drivers import kmt, mod4ko, mod8di
@@ -15,12 +20,6 @@ except:
     drivers = ['kmt', 'mod4ko']
 
 from models import db, Relay, SensorReading, WateringEvent
-
-def now():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-
-def time_from_str(string):
-    return datetime.time(*map(int, string.split(':')))
 
 def add_schedule(day, start, stop, valves):
     assert day in range(7), 'MUST BE A VALID DAY'
