@@ -1,5 +1,5 @@
 #! /bin/bash
 cd ~/agua
 source bin/activate
-./water_daemon.py &
+./daemons/watering.py &
 ./app.py

@@ -1,7 +1,6 @@
 
 
 app:
-    scheduling ui
     task runner
 
 thoughts:
@@ -13,4 +12,5 @@ thoughts:
 research
     swap fn/ctrl?
     look into ht1622 pin for data ctrl
+    try rs485 read (& sunnyboy)
 
