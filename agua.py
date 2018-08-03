@@ -39,6 +39,7 @@ def add_schedule(day, start, stop, valves):
     db.session.commit()
 
 def remove_schedule(id):
+    reset()
     event = WateringEvent.query.get(id)
     db.session.delete(event)
     db.session.commit()

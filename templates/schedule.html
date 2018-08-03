@@ -51,6 +51,11 @@
               <button name="delete" value="{{event.id}}" type="submit">Delete</button>
             </form>
           </td>
+          {% if event.in_progress %}
+          <td>
+              (in progress)
+          </td>
+          {% endif %}
         </tr>
         {% endfor %}
         <form method="post">

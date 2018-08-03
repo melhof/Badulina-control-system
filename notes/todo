@@ -1,8 +1,7 @@
 
 
 thoughts:
-    rebuild deploy venv
-    RQ vs celery
+    RQ vs celery, necessary?
     nodered
         driver for rs485
 

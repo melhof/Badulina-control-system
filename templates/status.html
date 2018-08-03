@@ -3,7 +3,7 @@
 {% block content %}
     <h1>System Status</h1>
     <div>Current Water flow is <b>{{current_flow }}</b> rotations/sec (from node-red)</div>
-    <div>Last Recorded water flow in DB (from agua.py) was <b>{{ last_flow.data }}</b> rotations/sec at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i></div>
+    <div>Last Recorded water flow in DB  was <b>{{ last_flow.data }}</b> rotations/sec at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i>(from data_collector.py)</div>
     {% if ERR %}
     <div>NO PUMP WITH CLOSED VALVES!</div>
     {% endif %}
