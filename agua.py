@@ -35,7 +35,6 @@ def add_schedule(day, start, stop, valves):
 
     potential_conflicts = WateringEvent.query.filter_by(day=day).all()
     for event in potential_conflicts:
-        print(event)
 
         if start < event.start:
             assert stop < event.start, 'OVERLAP: STOP BEFORE {}'.format(event.start)
@@ -74,18 +73,17 @@ def apply_schedule():
         WateringEvent.stop > time,
     ).all()
 
-    if current_task:
-        print(current_task)
+    if len(current_task) > 0:
         assert len(current_task) == 1
         current_task = current_task[0]
 
-        # be carefule w/ midnight behaviour
+        # be careful w/ midnight behaviour
         should_continue = current_task.day == day and current_task.stop > time
         if not should_continue:
             reset()
             current_task.update(in_progress=False)
 
-    if next_task:
+    if len(next_task) > 0:
         reset() #this line should be redundant; for safety
         print(next_task)
         assert len(next_task) == 1
@@ -109,6 +107,8 @@ def sample_flow_rate():
     return freq(signal, sample_hz)
 
 def current_flow_rate():
+    '''get flow rate from node-red
+    '''
     return requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
 
 def record_flow_rate():
@@ -190,6 +190,10 @@ from flask.cli import with_appcontext
 @click.command('agua_init')
 @with_appcontext
 def agua_init():
+    '''database initialization:
+    run before db.sqlite exists
+    to create tables and populate records
+    '''
     create_tables()
 
     AppState.create(AppState.State.operational)

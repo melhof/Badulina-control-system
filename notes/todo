@@ -1,13 +1,15 @@
 
-build out prototype web re-imple in node-red
-
-thoughts:
-    RQ vs celery, necessary?
-    nodered
-        driver for rs485
-
-research
-    swap fn/ctrl?
+hardware:
     look into ht1622 pin for data ctrl
-    try rs485 read (& sunnyboy)
+
+node-red:
+    driver for rs485
+    try building relay ctrl webpage
+
+agua:
+    manual pump activation has 1hr timer
+    try rs485 read (& sunnyboy ctrl)
+
+laptop:
+    swap fn/ctrl?
 

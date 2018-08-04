@@ -1,0 +1,36 @@
+
+commands.sh : bash commands to install, build, and run the app
+
+
+web framework: flask
+    entry point: app.py
+        composites all other layers
+
+    relational database: sqlite
+        embedded database
+        provides Structured Query Language (SQL) interface
+
+    object relational mapper: sql-alchemy (flask_sqlalchemy)
+        maps relational algebra to python objects
+
+    models: models.py
+        python objects that encapsulate all application state
+
+    domain logic: agua.py
+        all irrigation-specific system constraints
+        synchronizes hardware drivers with model state
+        
+    views: views.py
+        functions that:
+            receive flask requests
+            interact with domain and models layers
+            prepare context for template engine
+
+    templates: templates/
+        flask uses jinja template engine
+        templates rendered from context
+
+    user interface:
+        plain html
+        no interactivity (no javascript)
+        no visual design (no Cascading Style Sheets (CSS))

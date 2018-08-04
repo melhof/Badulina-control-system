@@ -15,8 +15,8 @@ from agua import record_flow_rate
 def main():
     with app.app_context():
         while True:
-            time.sleep(1)
             record_flow_rate()
+            time.sleep(1)
 
 if __name__ == '__main__':
     main()
