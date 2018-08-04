@@ -61,16 +61,35 @@
         <form method="post">
         <tr>
           <td class="col-day">
-            <select class="form-control" data-role="select" id="day" name="day" title="Day">
+            <select name="day">
               {% for day in schema.Days %}
               <option value="{{day.value}}">{{day.name}}</option>
               {% endfor %}
+            </select>
           </td>
           <td class="col-start">
-            <input type="time" id="start" name="start" step="60" required />
+            <select name="start-hour">
+              {% for hour in range(24) %}
+                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
+              {% endfor %}
+            </select>
+            <select name="start-min">
+              {% for min in range(60) %}
+                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
+              {% endfor %}
+            </select>
           </td>
           <td class="col-stop">
-            <input type="time" id="stop" name="stop" step="60" required />
+            <select name="stop-hour">
+              {% for hour in range(24) %}
+                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
+              {% endfor %}
+            </select>
+            <select name="stop-min">
+              {% for min in range(60) %}
+                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
+              {% endfor %}
+            </select>
           </td>
           <td>
           </td>

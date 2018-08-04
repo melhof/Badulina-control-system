@@ -6,11 +6,12 @@ This module encapsulates webserver logic:
 '''
 from flask import render_template, request, redirect
 from sqlalchemy import desc
+from datetime import time
 
-from utils import time_from_str
-from models import Relay, SensorReading, WateringEvent
+from models import Relay, SensorReading, WateringEvent, AppState
 from agua import (
-    reset,
+    suspend, 
+    resume,
     add_schedule,
     remove_schedule,
     drivers,
@@ -56,8 +57,10 @@ def relays():
 def status():
     context = {}
     if request.method == 'POST':
-        if 'reset' in request.form:
-            reset()
+        if 'suspend' in request.form:
+            suspend()
+        elif 'resume' in request.form:
+            resume()
         else:
             for key, value in request.form.items():
                 value = value == 'True'
@@ -81,6 +84,8 @@ def status():
         'valves': Relay.query.filter_by(board='kmt').all(),
         'current_flow': current_flow_rate(),
         'last_flow': SensorReading.query.order_by(desc('time')).first(),
+        'operational': AppState.query.one().state == AppState.State.operational,
+    
     })
     context.update(base_context)
     return render_template('status.html', **context)
@@ -94,8 +99,15 @@ def schedule():
             remove_schedule(int(form['delete']))
         else:
             day = WateringEvent.Days(int(request.form['day']))
-            start = time_from_str(form['start'])
-            stop = time_from_str(form['stop'])
+
+            start_hour = int(form['start-hour'])
+            start_min = int(form['start-min'])
+            stop_hour = int(form['stop-hour'])
+            stop_min = int(form['stop-min'])
+
+            start = time(start_hour, start_min)
+            stop = time(stop_hour, stop_min)
+
             valves = []
 
             for key, value in form.items():

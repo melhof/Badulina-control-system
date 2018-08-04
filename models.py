@@ -19,6 +19,15 @@ class Days(enum.Enum):
     saturday  = 5
     sunday    = 6
 
+class State(enum.Enum):
+    operational = 0
+    suspended = 1
+
+class AppState(db.Model):
+    State = State
+    id    = db.Column(db.Integer, primary_key  = True)
+    state = db.Column(db.Enum(State), nullable = False)
+
 class Relay(db.Model):
     id     = db.Column(db.Integer, primary_key=True)
     board  = db.Column(db.String(10), nullable=False)

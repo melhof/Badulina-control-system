@@ -8,7 +8,11 @@
     <div>NO PUMP WITH CLOSED VALVES!</div>
     {% endif %}
     <form class="container" method="post">
-      <button name="reset" >Reset</button>
+      {% if operational %}
+          <button name="suspend" >Suspend</button>
+      {% else %}
+          <button name="resume" >Resume</button>
+      {% endif %}
       <button name="pump" value="{{not pump.is_on}}">Pump is {{'On' if pump.is_on else 'Off'}}</button>
       <ul>
       {% for valve in valves %}

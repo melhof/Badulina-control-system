@@ -5,6 +5,7 @@ This module encapsulates domain logic:
 '''
 
 import requests
+from datetime import time
 
 from utils import now, freq
 
@@ -19,7 +20,7 @@ except:
     PI = False
     drivers = ['kmt', 'mod4ko']
 
-from models import db, Relay, SensorReading, WateringEvent
+from models import db, Relay, SensorReading, WateringEvent, AppState
 
 def add_schedule(day, start, stop, valves):
     assert stop > start, 'START MUST PRECEDE STOP'
@@ -39,12 +40,19 @@ def add_schedule(day, start, stop, valves):
     db.session.commit()
 
 def remove_schedule(id):
-    reset()
     event = WateringEvent.query.get(id)
+    if event.in_progress:
+        reset()
     db.session.delete(event)
     db.session.commit()
 
 def apply_schedule():
+    state = AppState.query.one()
+
+    if state.state != AppState.State.operational:
+        print('bypassing')
+        return
+
     moment = now()
     day = WateringEvent.Days(moment.weekday())
     time = moment.time()
@@ -120,6 +128,17 @@ def set_relay(board, idx, value):
     db.session.commit()
     return
 
+def suspend():
+    state = AppState.query.one()
+    state.state = AppState.State.suspended
+    db.session.commit()
+    reset()
+
+def resume():
+    state = AppState.query.one()
+    state.state = AppState.State.operational
+    db.session.commit()
+
 def reset():
     if PI:
         for driver in drivers.values():
@@ -175,13 +194,19 @@ def turn_valve_off(idx):
 import click
 from flask.cli import with_appcontext
 
-@click.command('init_db')
+@click.command('agua_init')
 @with_appcontext
-def init_db():
+def agua_init():
     db.create_all()
     drivers = [('kmt', 8), ('mod4ko', 4)]
+    db.session.add(AppState(state=AppState.State.operational))
+    db.session.add(SensorReading(board='mod8di', idx=0, data=0, time=now()))
     for driver, size in drivers:
         for i in range(size):
             db.session.add(Relay(board=driver, idx=i, is_on=False))
+    for day in WateringEvent.Days:
+        for valve in WateringEvent.Valves:
+            hour = valve + 12
+            db.session.add(WateringEvent.create(day,time(hour, 0),time(hour, 59), [valve]))  
     db.session.commit()
     return
