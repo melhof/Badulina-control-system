@@ -5,42 +5,89 @@
     <table >
         <thead>
           <tr>
-            <td class="col-day">
+            <td>
             Day
             </td>
-            <td class="col-start">
+            <td>
             Start
             </td>
-            <td class="col-stop">
+            <td>
             Stop
             </td> 
             <td>
             Valves:
             </td> 
             {% for valve in schema.Valves %}
-              <td class="col-valves-{{valve}}">
+              <td>
                 {{valve + 1}}
               </td>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
+        <form method="post">
+        <tr>
+          <td>
+            <select name="day">
+              {% for day in schema.Days %}
+              <option value="{{day.value}}">{{day.name}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select name="start-hour">
+              {% for hour in range(24) %}
+                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
+              {% endfor %}
+            </select>
+            <select name="start-min">
+              {% for min in range(60) %}
+                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <select name="stop-hour">
+              {% for hour in range(24) %}
+                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
+              {% endfor %}
+            </select>
+            <select name="stop-min">
+              {% for min in range(60) %}
+                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+          </td>
+            {% for valve in schema.Valves %}
+              <td>
+              <div>
+                <input type="checkbox" name="valve:{{valve}}" />
+              </div>
+              </td>
+            {% endfor %}
+          <td>
+            <button type="submit">Create</button>
+          </td>
+        </tr>
+        </form>
           {% for event in events %}
           <tr>
             </td>                
-            <td class="col-day">
+            <td>
             {{ event.day.name }}
             </td>
-            <td class="col-start">
+            <td>
             {{ event.start.strftime('%H:%M') }}
             </td>
-            <td class="col-stop">
+            <td>
             {{ event.stop.strftime('%H:%M') }}
             </td>
             <td>
             </td>
             {% for valve in schema.Valves %}
-              <td class="col-valves-{{valve}}">
+              <td>
               <div>
                   <input type="checkbox" disabled="disabled" {{ 'checked' if valve in event.valves else '' }}/>
               </div>
@@ -58,53 +105,6 @@
           {% endif %}
         </tr>
         {% endfor %}
-        <form method="post">
-        <tr>
-          <td class="col-day">
-            <select name="day">
-              {% for day in schema.Days %}
-              <option value="{{day.value}}">{{day.name}}</option>
-              {% endfor %}
-            </select>
-          </td>
-          <td class="col-start">
-            <select name="start-hour">
-              {% for hour in range(24) %}
-                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
-              {% endfor %}
-            </select>
-            <select name="start-min">
-              {% for min in range(60) %}
-                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
-              {% endfor %}
-            </select>
-          </td>
-          <td class="col-stop">
-            <select name="stop-hour">
-              {% for hour in range(24) %}
-                  <option value="{{hour}}">{{"%02d"|format(hour)}}</option>
-              {% endfor %}
-            </select>
-            <select name="stop-min">
-              {% for min in range(60) %}
-                  <option value="{{min}}">{{"%02d"|format(min)}}</option>
-              {% endfor %}
-            </select>
-          </td>
-          <td>
-          </td>
-            {% for valve in schema.Valves %}
-              <td class="col-valves-{{valve}}">
-              <div>
-                <input type="checkbox" name="valve:{{valve}}" />
-              </div>
-              </td>
-            {% endfor %}
-          <td>
-            <button type="submit">Create</button>
-          </td>
-        </tr>
-        </form>
     </tbody>
     </table>
     {% if ERR %}

@@ -4,7 +4,7 @@
     {% block head %}
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
-    <ul id="navigation">
+    <ul>
     {% for item in navigation %}
         <li><a href="/{{ item }}">{{ item }}</a></li>
     {% endfor %}

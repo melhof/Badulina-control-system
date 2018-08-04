@@ -20,7 +20,14 @@ except:
     PI = False
     drivers = ['kmt', 'mod4ko']
 
-from models import db, Relay, SensorReading, WateringEvent, AppState
+from models import (
+    save,
+    create_tables,
+    Relay,
+    SensorReading,
+    WateringEvent,
+    AppState,
+)
 
 def add_schedule(day, start, stop, valves):
     assert stop > start, 'START MUST PRECEDE STOP'
@@ -35,16 +42,15 @@ def add_schedule(day, start, stop, valves):
         else:
             assert start > event.stop, 'OVERLAP: START AFTER {}'.format(event.stop)
 
-    event = WateringEvent.create(day, start, stop, valves)
-    db.session.add(event)
-    db.session.commit()
+    WateringEvent.create(day, start, stop, valves)
+    return
 
 def remove_schedule(id):
     event = WateringEvent.query.get(id)
     if event.in_progress:
         reset()
-    db.session.delete(event)
-    db.session.commit()
+    event.delete()
+    return
 
 def apply_schedule():
     state = AppState.query.one()
@@ -77,8 +83,7 @@ def apply_schedule():
         should_continue = current_task.day == day and current_task.stop > time
         if not should_continue:
             reset()
-            current_task.in_progress = False
-            db.session.commit()
+            current_task.update(in_progress=False)
 
     if next_task:
         reset() #this line should be redundant; for safety
@@ -87,7 +92,7 @@ def apply_schedule():
         next_task = next_task[0]
 
         next_task.in_progress = True
-        db.session.commit()
+        next_task.update(in_progress=True)
         start_watering(next_task)
 
 def start_watering(event):
@@ -95,12 +100,13 @@ def start_watering(event):
         turn_valve_on(valve)
     turn_pump_on()
 
-
 def sample_flow_rate():
     channel = 0
     sample_hz = 300
-    n_samples = 1000
-    return freq(mod8di.build(channel, sample_hz, n_samples), sample_hz)
+    n_seconds = 10
+    n_samples = sample_hz * n_seconds
+    signal = mod8di.build(channel, sample_hz, n_samples)
+    return freq(signal, sample_hz)
 
 def current_flow_rate():
     return requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
@@ -113,8 +119,7 @@ def record_flow_rate():
     else:
         rate = current_flow_rate()
 
-    db.session.add(SensorReading(board='mod8di', idx=0, data=rate, time=time))
-    db.session.commit()
+    SensorReading.create('mod8di', 0, rate, time)
     return
 
 def set_relay(board, idx, value):
@@ -123,21 +128,17 @@ def set_relay(board, idx, value):
         drivers[board].send(idx, value)
     else:
         print('NOT PI: faking {}[{}] to {}'.format(board, idx, value))
-    relay.is_on = value
-    db.session.add(relay)
-    db.session.commit()
+    relay.update(is_on=value)
     return
 
 def suspend():
     state = AppState.query.one()
-    state.state = AppState.State.suspended
-    db.session.commit()
+    state.update(state=AppState.State.suspended)
     reset()
 
 def resume():
     state = AppState.query.one()
-    state.state = AppState.State.operational
-    db.session.commit()
+    state.update(state=AppState.State.operational)
 
 def reset():
     if PI:
@@ -145,7 +146,7 @@ def reset():
             driver.reset()
     Relay.query.update(dict(is_on=False))
     WateringEvent.query.update(dict(in_progress=False))
-    db.session.commit()
+    save()
 
 def turn_pump_on():
     pump = Relay.query.filter_by(board='mod4ko', idx=0).one()
@@ -153,19 +154,15 @@ def turn_pump_on():
         assert Relay.query.filter_by(board='kmt', is_on=False).count() < 8
         if PI:
             drivers['mod4ko'].turn_on(0)
-        pump.is_on = True
-        db.session.add(pump)
-        db.session.commit()
+        pump.update(is_on=True)
     return
 
 def turn_pump_off():
     pump = Relay.query.filter_by(board='mod4ko', idx=0).one()
     if pump.is_on:
-        pump.is_on = False
         if PI:
             drivers['mod4ko'].turn_off(0)
-        db.session.add(pump)
-        db.session.commit()
+        pump.update(is_on=False)
     return
 
 def turn_valve_on(idx):
@@ -173,9 +170,7 @@ def turn_valve_on(idx):
     if not valve.is_on:
         if PI:
             drivers['kmt'].turn_on(idx)
-        valve.is_on = True
-        db.session.add(valve)
-        db.session.commit()
+        valve.update(is_on=True)
     return
 
 def turn_valve_off(idx):
@@ -186,9 +181,7 @@ def turn_valve_off(idx):
             assert Relay.query.filter_by(board='kmt', is_on=False).count() < 7
         if PI:
             drivers['kmt'].turn_off(idx)
-        valve.is_on = False
-        db.session.add(valve)
-        db.session.commit()
+        valve.update(is_on=False)
     return
 
 import click
@@ -197,16 +190,17 @@ from flask.cli import with_appcontext
 @click.command('agua_init')
 @with_appcontext
 def agua_init():
-    db.create_all()
-    drivers = [('kmt', 8), ('mod4ko', 4)]
-    db.session.add(AppState(state=AppState.State.operational))
-    db.session.add(SensorReading(board='mod8di', idx=0, data=0, time=now()))
-    for driver, size in drivers:
+    create_tables()
+
+    AppState.create(AppState.State.operational)
+    SensorReading.create('mod8di', 0, 0, now())
+
+    for driver, size in [('kmt', 8), ('mod4ko', 4)]:
         for i in range(size):
-            db.session.add(Relay(board=driver, idx=i, is_on=False))
+            Relay.create(driver, i)
+
     for day in WateringEvent.Days:
         for valve in WateringEvent.Valves:
             hour = valve + 12
-            db.session.add(WateringEvent.create(day,time(hour, 0),time(hour, 59), [valve]))  
-    db.session.commit()
+            WateringEvent.create(day, time(hour, 0), time(hour, 59), [valve])
     return

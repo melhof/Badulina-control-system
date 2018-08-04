@@ -4,6 +4,7 @@
     <h1>System Status</h1>
     <div>Current Water flow is <b>{{current_flow }}</b> rotations/sec (from node-red)</div>
     <div>Last Recorded water flow in DB  was <b>{{ last_flow.data }}</b> rotations/sec at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i>(from data_collector.py)</div>
+    <br/>
     {% if ERR %}
     <div>NO PUMP WITH CLOSED VALVES!</div>
     {% endif %}
@@ -13,12 +14,12 @@
       {% else %}
           <button name="resume" >Resume</button>
       {% endif %}
-      <button name="pump" value="{{not pump.is_on}}">Pump is {{'On' if pump.is_on else 'Off'}}</button>
       <ul>
+      <button name="pump" value="{{not pump.is_on}}">Pump is {{'On' if pump.is_on else 'Off'}}</button>
       {% for valve in valves %}
         <li>
           <button name="valve:{{valve.idx}}" value="{{not valve.is_on}}">
-            Valve is {{'Open' if valve.is_on else 'Closed'}}
+              Valve {{valve.idx+1}} is {{'Open' if valve.is_on else 'Closed'}}
           </button>
         </li>
       {% endfor %}
