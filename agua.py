@@ -99,17 +99,25 @@ def start_watering(event):
     turn_pump_on()
 
 def sample_flow_rate():
+    '''get flow rate from by sampling digital imput D1 in L/s'''
     channel = 0
     sample_hz = 300
     n_seconds = 10
     n_samples = sample_hz * n_seconds
     signal = mod8di.build(channel, sample_hz, n_samples)
-    return freq(signal, sample_hz)
+    raw = freq(signal, sample_hz)
+    K = 1 # TODO: this parameter needs to be calibrated emperically
+    value = raw * K
+    return value
 
 def current_flow_rate():
-    '''get flow rate from node-red
-    '''
-    return requests.get('http://192.168.1.147:1880/flow_meter/').json()['freq']
+    '''get flow rate from node-red this should be in L/s'''
+    response= requests.get('http://192.168.1.147:1880/water_flow_rate/')
+    payload=response.json()
+    freq=payload['freq']
+
+    
+    return freq 
 
 def record_flow_rate():
     time = now()
