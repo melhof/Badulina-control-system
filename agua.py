@@ -110,13 +110,20 @@ def sample_flow_rate():
     value = raw * K
     return value
 
+def melchiors_empirial_flowrate():
+    channel = 0
+    sample_hz = 300
+    n_seconds = 10
+    n_samples = sample_hz * n_seconds
+    signal, actual = mod8di.build_with_timing(channel, sample_hz, n_samples)
+    rate = freq_empirical(signal, actual)
+    return rate
+
 def current_flow_rate():
     '''get flow rate from node-red this should be in L/s'''
     response= requests.get('http://192.168.1.147:1880/water_flow_rate/')
     payload=response.json()
     freq=payload['freq']
-
-    
     return freq 
 
 def record_flow_rate():
