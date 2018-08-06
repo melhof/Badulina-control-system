@@ -16,7 +16,7 @@ def offset(lst):
     '''
     return zip(lst, lst[1:])
 
-def freq(signal, hz):
+def signal_to_freq(signal, hz):
     idx = get_idx(signal)
     return idx2freq1(idx, hz)
 
@@ -38,7 +38,7 @@ def idx2freq1(idx, hz):
     else:
         return 0
 
-def freq_empirical(signal, actual):
+def signal_to_freq_empirical(signal, actual):
     idx = get_idx(signal)
     return len(idx) / actual
 

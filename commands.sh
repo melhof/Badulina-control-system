@@ -8,8 +8,6 @@
 
 agua-install() {
     # install system packages and start services
-    sudo systemctl enable nodered.service
-    sudo service nodered restart
     wget https://github.com/widgetlords/libwidgetlords/releases/download/v1.0.2/libwidgetlords_1.0.2_armhf.deb
     sudo dpkg -i libwidgetlords_1.0.2_armhf.deb
     rm libwidgetlords_1.0.2_armhf.deb 
@@ -17,9 +15,7 @@ agua-install() {
 
 agua-uninstall() {
     # uninstall system packages and stop services
-    sudo service nodered stop
     sudo service agua stop
-    sudo systemctl disable nodered.service
     sudo systemctl disable agua.service
 
     sudo rm /etc/systemd/system/agua.service
@@ -34,6 +30,10 @@ agua-build() {
 
     pip install -r requirements.txt 
     ln -s /usr/lib/python3/dist-packages/widgetlords lib/python3.5/site-packages/
+    
+    flask db init
+    flask db migrate
+    flask db upgrade
 
     flask agua_init
 
@@ -46,5 +46,12 @@ agua-build() {
 
 agua-deploy() {
     # restart agua service
-    sudo service agua restart
+    sudo service agua stop
+    source bin/activate
+
+    flask db migrate
+    flask db upgrade
+
+    sudo service agua start
+
 }

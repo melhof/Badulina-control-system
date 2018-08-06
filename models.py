@@ -10,6 +10,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+def load_app():
+    ''' create an app-db connection outside webserver
+    ie when running a python terminal, etc
+    '''
+    from app import app
+    app.app_context().push()
+
 def create_tables():
     db.create_all()
 
@@ -56,7 +63,7 @@ class AppState(AguaModel):
         suspended = 1
 
     id = db.Column(db.Integer, primary_key=True)
-    state = db.Column(db.Enum(State), nullable=False)
+    state = db.Column(db.Enum(State))
 
     @classmethod
     def create(cls, state):
@@ -66,9 +73,9 @@ class AppState(AguaModel):
 
 class Relay(AguaModel):
     id = db.Column(db.Integer, primary_key=True)
-    board = db.Column(db.String(10), nullable=False)
-    idx = db.Column(db.Integer, nullable=False)
-    is_on = db.Column(db.Boolean, nullable=False, default=False)
+    board = db.Column(db.String(10))
+    idx = db.Column(db.Integer)
+    is_on = db.Column(db.Boolean)
 
     @classmethod
     def create(cls, board, idx):
@@ -78,10 +85,10 @@ class Relay(AguaModel):
 
 class SensorReading(AguaModel):
     id = db.Column(db.Integer, primary_key=True)
-    board = db.Column(db.String(10), nullable=False)
-    idx = db.Column(db.Integer, nullable=False)
-    data = db.Column(db.Integer, nullable=False)
-    time = db.Column(db.DateTime, nullable=False)
+    board = db.Column(db.String(10))
+    idx = db.Column(db.Integer)
+    data = db.Column(db.Integer)
+    time = db.Column(db.DateTime)
 
     @classmethod
     def create(cls, board, idx, data, time):
@@ -102,11 +109,11 @@ class WateringEvent(AguaModel):
     Valves = range(8)
 
     id = db.Column(db.Integer, primary_key=True)
-    day = db.Column(db.Enum(Days), nullable=False)
-    start = db.Column(db.Time, nullable=False)
-    stop = db.Column(db.Time, nullable=False)
-    valves_ = db.Column(db.String(10), nullable=False)
-    in_progress = db.Column(db.Boolean, nullable=False, default=False)
+    day = db.Column(db.Enum(Days))
+    start = db.Column(db.Time)
+    stop = db.Column(db.Time)
+    valves_ = db.Column(db.String(10))
+    in_progress = db.Column(db.Boolean, default=False)
 
     @property
     def valves(self):

@@ -4,22 +4,12 @@ This module encapsulates domain logic:
     knowledge about irrigation hardware configuration
 '''
 
-import requests
+import getpass
 from datetime import time
 
-from utils import now, freq
+import requests
 
-try:
-    from drivers import kmt, mod4ko, mod8di
-    PI = True
-    drivers = {
-        'kmt': kmt,
-        'mod4ko': mod4ko,
-    }
-except:
-    PI = False
-    drivers = ['kmt', 'mod4ko']
-
+from utils import now, signal_to_freq, signal_to_freq_empirical
 from models import (
     save,
     create_tables,
@@ -28,6 +18,19 @@ from models import (
     WateringEvent,
     AppState,
 )
+
+username = getpass.getuser()
+
+if username == 'pi':
+    from drivers import kmt, mod4ko, mod8di
+    PI = True
+    drivers = {
+        'kmt': kmt,
+        'mod4ko': mod4ko,
+    }
+else:
+    PI = False
+    drivers = ['kmt', 'mod4ko']
 
 def add_schedule(day, start, stop, valves):
     assert stop > start, 'START MUST PRECEDE STOP'
@@ -105,7 +108,7 @@ def sample_flow_rate():
     n_seconds = 10
     n_samples = sample_hz * n_seconds
     signal = mod8di.build(channel, sample_hz, n_samples)
-    raw = freq(signal, sample_hz)
+    raw = signal_to_freq(signal, sample_hz)
     K = 1 # TODO: this parameter needs to be calibrated emperically
     value = raw * K
     return value
@@ -116,7 +119,7 @@ def melchiors_empirial_flowrate():
     n_seconds = 10
     n_samples = sample_hz * n_seconds
     signal, actual = mod8di.build_with_timing(channel, sample_hz, n_samples)
-    rate = freq_empirical(signal, actual)
+    rate = signal_to_freq_empirical(signal, actual)
     return rate
 
 def current_flow_rate():
@@ -206,10 +209,9 @@ from flask.cli import with_appcontext
 @with_appcontext
 def agua_init():
     '''database initialization:
-    run before db.sqlite exists
-    to create tables and populate records
+        populate records
+        run after database & schema already created
     '''
-    create_tables()
 
     AppState.create(AppState.State.operational)
     SensorReading.create('mod8di', 0, 0, now())
