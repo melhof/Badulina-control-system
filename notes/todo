@@ -4,7 +4,6 @@ hardware:
 
 node-red:
     find/write driver for rs485
-    try building relay ctrl webpage
 
 agua:
     sensory history page

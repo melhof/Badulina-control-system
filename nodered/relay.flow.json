@@ -1,0 +1,341 @@
+[
+  {
+    "id": "c93a444a.10be",
+    "type": "http in",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "url": "mod4ko",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 90,
+    "y": 140,
+    "wires": [
+      [
+        "4c85e0e2.0f8dd"
+      ]
+    ]
+  },
+  {
+    "id": "66f1a1bf.e17c68",
+    "type": "widgetlords-relay",
+    "z": "1dd2320a.7877fe",
+    "name": "r0",
+    "channel": "0",
+    "address": "0",
+    "chipenable": "3",
+    "x": 750,
+    "y": 340,
+    "wires": [
+      
+    ]
+  },
+  {
+    "id": "61b8b087.94f0d",
+    "type": "http response",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "statusCode": "200",
+    "headers": {
+      
+    },
+    "x": 760,
+    "y": 60,
+    "wires": [
+      
+    ]
+  },
+  {
+    "id": "4c85e0e2.0f8dd",
+    "type": "template",
+    "z": "1dd2320a.7877fe",
+    "name": "relays page template",
+    "field": "payload",
+    "fieldType": "msg",
+    "format": "handlebars",
+    "syntax": "mustache",
+    "template": "<html lang=\"en\">\n<head>\n    <title>Relays<\/title>\n    <ul>\n        <li><a href=\"\/mod4ko\">relays<\/a><\/li>\n    <\/ul>\n<\/head>\n<body>\n  <h1>Relays<\/h1>\n  <form method=\"post\">\n    <ul>\n      mod4ko\n      <li>\n        <button name=\"relay0\" value=\"{{flow.relay0}}\">\n          {{flow.relay0}}\n        <\/button>\n      <\/li>\n      <li>\n        <button name=\"relay1\" value=\"{{flow.relay1}}\">\n          {{flow.relay1}}\n        <\/button>\n      <\/li>\n      <li>\n        <button name=\"relay2\" value=\"{{flow.relay2}}\">\n          {{flow.relay2}}\n        <\/button>\n      <\/li>\n      <li>\n        <button name=\"relay3\" value=\"{{flow.relay3}}\">\n          {{flow.relay3}}\n        <\/button>\n      <\/li>\n    <\/ul>\n  <\/form>\n<\/body>\n<\/html>\n",
+    "output": "str",
+    "x": 500,
+    "y": 60,
+    "wires": [
+      [
+        "61b8b087.94f0d"
+      ]
+    ]
+  },
+  {
+    "id": "ffd71b71.39fa38",
+    "type": "http in",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "url": "mod4ko",
+    "method": "post",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 80,
+    "y": 180,
+    "wires": [
+      [
+        "59998d0c.e36adc"
+      ]
+    ]
+  },
+  {
+    "id": "eba67c2.81332",
+    "type": "http in",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "url": "mod4ko\/reset",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 90,
+    "y": 260,
+    "wires": [
+      [
+        "49e86b16.d59ffc"
+      ]
+    ]
+  },
+  {
+    "id": "49e86b16.d59ffc",
+    "type": "change",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "relay0",
+        "pt": "flow",
+        "to": "false",
+        "tot": "bool"
+      },
+      {
+        "t": "set",
+        "p": "relay1",
+        "pt": "flow",
+        "to": "false",
+        "tot": "bool"
+      },
+      {
+        "t": "set",
+        "p": "relay2",
+        "pt": "flow",
+        "to": "false",
+        "tot": "bool"
+      },
+      {
+        "t": "set",
+        "p": "relay3",
+        "pt": "flow",
+        "to": "false",
+        "tot": "bool"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 120,
+    "y": 380,
+    "wires": [
+      [
+        "4c85e0e2.0f8dd",
+        "7e7d011.85cd08",
+        "43d3f6f5.21be28",
+        "9920f597.fbe488",
+        "d54b0f83.ced8f8"
+      ]
+    ]
+  },
+  {
+    "id": "7e7d011.85cd08",
+    "type": "change",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "relay0",
+        "tot": "flow"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 510,
+    "y": 340,
+    "wires": [
+      [
+        "66f1a1bf.e17c68"
+      ]
+    ]
+  },
+  {
+    "id": "9920f597.fbe488",
+    "type": "change",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "relay2",
+        "tot": "flow"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 510,
+    "y": 460,
+    "wires": [
+      [
+        "679c8165.c3b2b"
+      ]
+    ]
+  },
+  {
+    "id": "43d3f6f5.21be28",
+    "type": "change",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "relay1",
+        "tot": "flow"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 510,
+    "y": 400,
+    "wires": [
+      [
+        "fd7283b4.abd538"
+      ]
+    ]
+  },
+  {
+    "id": "d54b0f83.ced8f8",
+    "type": "change",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "relay3",
+        "tot": "flow"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 510,
+    "y": 520,
+    "wires": [
+      [
+        "81d6c4dc.2058f"
+      ]
+    ]
+  },
+  {
+    "id": "fd7283b4.abd538",
+    "type": "widgetlords-relay",
+    "z": "1dd2320a.7877fe",
+    "name": "r1",
+    "channel": "1",
+    "address": "0",
+    "chipenable": "3",
+    "x": 750,
+    "y": 400,
+    "wires": [
+      
+    ]
+  },
+  {
+    "id": "679c8165.c3b2b",
+    "type": "widgetlords-relay",
+    "z": "1dd2320a.7877fe",
+    "name": "r2",
+    "channel": "2",
+    "address": "0",
+    "chipenable": "3",
+    "x": 750,
+    "y": 460,
+    "wires": [
+      
+    ]
+  },
+  {
+    "id": "81d6c4dc.2058f",
+    "type": "widgetlords-relay",
+    "z": "1dd2320a.7877fe",
+    "name": "r3",
+    "channel": "3",
+    "address": "0",
+    "chipenable": "3",
+    "x": 750,
+    "y": 520,
+    "wires": [
+      
+    ]
+  },
+  {
+    "id": "59998d0c.e36adc",
+    "type": "function",
+    "z": "1dd2320a.7877fe",
+    "name": "toggle",
+    "func": "\nfunction toggle(name) {\n    if (msg.payload[name] === 'true') {\n        flow.set(name, false);\n    } else if (msg.payload[name] === 'false') {\n        flow.set(name, true);\n    }\n}\n\ntoggle('relay0');\ntoggle('relay1');\ntoggle('relay2');\ntoggle('relay3');\n\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 250,
+    "y": 180,
+    "wires": [
+      [
+        "7e7d011.85cd08",
+        "43d3f6f5.21be28",
+        "4c85e0e2.0f8dd",
+        "9920f597.fbe488",
+        "d54b0f83.ced8f8",
+        "476fd0f0.28d998"
+      ]
+    ]
+  },
+  {
+    "id": "476fd0f0.28d998",
+    "type": "debug",
+    "z": "1dd2320a.7877fe",
+    "name": "",
+    "active": false,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "x": 590,
+    "y": 180,
+    "wires": [
+      
+    ]
+  }
+]
+
