@@ -3,13 +3,17 @@ hardware:
     look into ht1622 pin for data ctrl
 
 node-red:
-    driver for rs485
+    find/write driver for rs485
     try building relay ctrl webpage
 
 agua:
+    sensory history page
+    only record sensor data while pump running
+    command for schema migrate with existing db
     manual pump activation has 1hr timer
-    try rs485 read (& sunnyboy ctrl)
+
+    retry rs485 read (& sunnyboy ctrl?)
 
 laptop:
-    swap fn/ctrl?
+    swap fn/ctrl keys?
 

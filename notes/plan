@@ -1,21 +1,22 @@
 
 phases
-    minimum viable product (MVP)
+    finished
         scheduled pump control
         scheduled valve control
         manual control view for pump/valves
-    additional
+    in progress
         data view for flow/pressure sensors
+    future
         dynamic scheduling based on rain sensor or web data
         multitank monitoring w/ dynamic scheduling
         stats view to correlate aggregates w/ tree health/yield/etc 
 
 features
-    minimum viable product (MVP)
+    finished
         web page with current status and control buttons
         web page with current schedule and schedule setting
 
-    additional
+    future
         information user switch activation
         statistics low ground water level sensor/auto pump switchoff
         statistics water flow total
@@ -23,10 +24,17 @@ features
         statistics rainsensor data
      
 operational requirements
-    webserver always running whenever pi is on
-    pump never runs while webserver is dead
-    pump never runs with all valves closed
-    pump switches off when minimum (0,5l/s) flow is not detected within 30 seconds
-    manually activated pump standard never runs for >1hr
-    pump and valves are distant from server
-    if multiple users edit state or schedule: last write wins
+    finished
+        webserver always running whenever pi is on
+        pump never runs with all valves closed (software logic)
+        if multiple users edit state or schedule: last edit wins
+
+    in progress:
+        manually activated pump standard never runs for >1hr
+
+    future:
+        pump never runs with all valves closed (hardware circuit)
+        pump never runs while webserver is dead
+            (watch app heartbeat via cloud monitoring/alerting service?)
+        pump and valves are distant from server
+        pump switches off when minimum (0,5l/s) flow is not detected within 30 seconds

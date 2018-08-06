@@ -3,6 +3,8 @@ commands.sh : bash commands to install, build, and run the app
 
 
 web framework: flask
+    http://flask.pocoo.org/docs/1.0/
+
     entry point: app.py
         composites all other layers
 
@@ -10,8 +12,13 @@ web framework: flask
         embedded database
         provides Structured Query Language (SQL) interface
 
+        https://www.sqlite.org/index.html
+
     object relational mapper: sql-alchemy (flask_sqlalchemy)
         maps relational algebra to python objects
+
+        http://flask-sqlalchemy.pocoo.org/2.3/
+        http://www.sqlalchemy.org/
 
     models: models.py
         python objects that encapsulate all application state
@@ -30,7 +37,10 @@ web framework: flask
         flask uses jinja template engine
         templates rendered from context
 
+        http://jinja.pocoo.org/docs/2.10/
+
     user interface:
         plain html
         no interactivity (no javascript)
         no visual design (no Cascading Style Sheets (CSS))
+
