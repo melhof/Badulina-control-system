@@ -29,6 +29,7 @@ base_context = {
         'relays',
         'status',
         'schedule',
+        'history',
     ],
 }
 
@@ -78,11 +79,14 @@ def status():
                             turn_valve_off(idx)
                 except AssertionError:
                     context['ERR'] = True
-
+    try:
+        flow_rate=current_flow_rate()
+    except:
+        flow_rate='not available'                
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
-        'current_flow': current_flow_rate(),
+        'current_flow': flow_rate,
         'last_flow': SensorReading.query.order_by(desc('time')).first(),
         'operational': AppState.query.one().state == AppState.State.operational,
     

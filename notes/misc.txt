@@ -1,0 +1,4 @@
+
+Run these commands in a bash terminal to enable NODE-red always running:    
+sudo systemctl enable nodered.service
+sudo service nodered restart
