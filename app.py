@@ -21,13 +21,14 @@ import views
 
 os.environ['FLASK_ENV'] = 'development' # trigger debug mode for webserver
 os.environ['WERKZEUG_DEBUG_PIN'] = 'off' # no password for interactive web debugger console
-current_dir = os.getcwd()
+#current_dir = os.getcwd()
 
 app = Flask(__name__)
 
 # set basic app config
 app.secret_key = '|1_CtCNnbJ%<F:oL' #randomly generated
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/db.sqlite'.format(current_dir)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}/db.sqlite'.format(current_dir)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'.format(current_dir)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db.init_app(app)

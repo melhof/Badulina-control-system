@@ -10,6 +10,10 @@ agua:
     sensory history page
     only record sensor data while pump running
     command for schema migrate with existing db
+        ideas:
+            move db file, create, then copyover
+            output to json, drop, create, insert
+            use flask-migrate
     manual pump activation has 1hr timer
 
     retry rs485 read (& sunnyboy ctrl?)
