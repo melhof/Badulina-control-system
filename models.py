@@ -64,6 +64,7 @@ class AppState(AguaModel):
 
     id = db.Column(db.Integer, primary_key=True)
     state = db.Column(db.Enum(State))
+    manually_modified = db.Column(db.Boolean())
 
     @classmethod
     def create(cls, state):

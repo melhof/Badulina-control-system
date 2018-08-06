@@ -100,7 +100,10 @@
           </td>
           {% if event.in_progress %}
           <td>
-              (in progress)
+            (in progress)
+            {% if modified  %}
+            System has been manually altered
+            {% endif %}
           </td>
           {% endif %}
         </tr>

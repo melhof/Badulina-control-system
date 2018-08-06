@@ -79,17 +79,21 @@ def status():
                             turn_valve_off(idx)
                 except AssertionError:
                     context['ERR'] = True
+
+            AppState.query.one().update(manually_modified=True)
     try:
         flow_rate=current_flow_rate()
     except:
         flow_rate='not available'                
+
+    state = AppState.query.one()
     context.update({ 
         'pump': Relay.query.filter_by(board='mod4ko', idx=0).one(),
         'valves': Relay.query.filter_by(board='kmt').all(),
         'current_flow': flow_rate,
         'last_flow': SensorReading.query.order_by(desc('time')).first(),
-        'operational': AppState.query.one().state == AppState.State.operational,
-    
+        'operational': state.state == AppState.State.operational,
+        'modified': state.manually_modified,
     })
     context.update(base_context)
     return render_template('status.html', **context)
@@ -124,10 +128,17 @@ def schedule():
             except AssertionError as err:
                 context['ERR'] = True
                 context['ERRMSG'] = str(err)
-    events = sorted(WateringEvent.query.all(), key=lambda event: (event.day.value, event.start))
+
+    def day_sort(event):
+        return (event.day.value, event.start)
+
+    events = sorted(WateringEvent.query.all(), key=day_sort)
+
+    state = AppState.query.one()
     context.update({ 
         'schema': WateringEvent,
         'events': events,
+        'modified': state.manually_modified,
     })
     context.update(base_context)
     return render_template('schedule.html', **context)

@@ -97,6 +97,8 @@ def apply_schedule():
         start_watering(next_task)
 
 def start_watering(event):
+    state = AppState.query.one()
+    state.update(manually_modified=False)
     for valve in event.valves:
         turn_valve_on(valve)
     turn_pump_on()
@@ -156,7 +158,10 @@ def suspend():
 
 def resume():
     state = AppState.query.one()
-    state.update(state=AppState.State.operational)
+    state.update(
+        state=AppState.State.operational,
+        manually_modified=False,
+    )
 
 def reset():
     if PI:
