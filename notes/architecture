@@ -1,6 +1,8 @@
 
 commands.sh : bash commands to install, build, and run the app
 
+tool for migrating database schema: flask-migrate
+    https://flask-migrate.readthedocs.io/en/latest/
 
 web framework: flask
     http://flask.pocoo.org/docs/1.0/

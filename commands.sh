@@ -31,8 +31,6 @@ agua-build() {
     pip install -r requirements.txt 
     ln -s /usr/lib/python3/dist-packages/widgetlords lib/python3.5/site-packages/
     
-    flask db init
-    flask db migrate
     flask db upgrade
 
     flask agua_init
@@ -49,7 +47,6 @@ agua-deploy() {
     sudo service agua stop
     source bin/activate
 
-    flask db migrate
     flask db upgrade
 
     sudo service agua start
