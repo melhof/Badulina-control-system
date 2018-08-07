@@ -1,0 +1,155 @@
+{
+    "id": "44da53d2.34f164",
+    "label": "RPi water flow sensor",
+    "nodes": [
+        {
+            "id": "e4269293.b2ab28",
+            "type": "widgetlords-digital",
+            "z": "44da53d2.34f164",
+            "name": "D1 flow sensor input",
+            "channel": "0",
+            "address": "0",
+            "chipenable": "2",
+            "interval": "1",
+            "x": 100,
+            "y": 180,
+            "wires": [
+                [
+                    "82d10376.e62a08"
+                ]
+            ]
+        },
+        {
+            "id": "23546225.63ed7e",
+            "type": "comment",
+            "z": "44da53d2.34f164",
+            "name": "Read  RPI-SPI-8DI: D1",
+            "info": "Reads the Raspberry Pi RPI-SPI-8DI: D1 every 15 seconds, \nformats the data to tidy up the string and \nthen sends the data to ...\n",
+            "x": 420,
+            "y": 120,
+            "wires": []
+        },
+        {
+            "id": "e414bb9.9caeb48",
+            "type": "debug",
+            "z": "44da53d2.34f164",
+            "name": "",
+            "active": false,
+            "tosidebar": true,
+            "console": true,
+            "tostatus": true,
+            "complete": "payload",
+            "x": 700,
+            "y": 180,
+            "wires": []
+        },
+        {
+            "id": "b50e7abf.90759",
+            "type": "frequency",
+            "z": "44da53d2.34f164",
+            "name": "freq1",
+            "interval": "1000",
+            "ntfyinterval": "1000",
+            "x": 510,
+            "y": 180,
+            "wires": [
+                [
+                    "e414bb9.9caeb48",
+                    "6b5ab897.fffbc"
+                ]
+            ]
+        },
+        {
+            "id": "82d10376.e62a08",
+            "type": "rbe",
+            "z": "44da53d2.34f164",
+            "name": "",
+            "func": "deadbandEq",
+            "gap": "1",
+            "start": "",
+            "inout": "in",
+            "property": "payload",
+            "x": 330,
+            "y": 180,
+            "wires": [
+                [
+                    "b50e7abf.90759"
+                ]
+            ]
+        },
+        {
+            "id": "1d79db20.45459d",
+            "type": "http in",
+            "z": "44da53d2.34f164",
+            "name": "",
+            "url": "water_flow_rate",
+            "method": "get",
+            "upload": false,
+            "swaggerDoc": "",
+            "x": 160,
+            "y": 340,
+            "wires": [
+                [
+                    "d490cf3d.a88e88"
+                ]
+            ]
+        },
+        {
+            "id": "49dd3627.fe779",
+            "type": "http response",
+            "z": "44da53d2.34f164",
+            "name": "",
+            "statusCode": "200",
+            "headers": {
+                "content-type": "application/json"
+            },
+            "x": 720,
+            "y": 340,
+            "wires": []
+        },
+        {
+            "id": "d490cf3d.a88e88",
+            "type": "template",
+            "z": "44da53d2.34f164",
+            "name": "json",
+            "field": "payload",
+            "fieldType": "msg",
+            "format": "handlebars",
+            "syntax": "mustache",
+            "template": "{\n    \"freq\": \"{{flow.freq}}\"\n}",
+            "output": "json",
+            "x": 450,
+            "y": 340,
+            "wires": [
+                [
+                    "49dd3627.fe779"
+                ]
+            ]
+        },
+        {
+            "id": "6b5ab897.fffbc",
+            "type": "change",
+            "z": "44da53d2.34f164",
+            "name": "set flow freq",
+            "rules": [
+                {
+                    "t": "set",
+                    "p": "freq",
+                    "pt": "flow",
+                    "to": "payload",
+                    "tot": "msg"
+                }
+            ],
+            "action": "",
+            "property": "",
+            "from": "",
+            "to": "",
+            "reg": false,
+            "x": 520,
+            "y": 260,
+            "wires": [
+                []
+            ]
+        }
+    ]
+}

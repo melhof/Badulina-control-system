@@ -1,0 +1,56 @@
+{
+    "id": "e9164206.d6a3e8",
+    "label": "new flow 3",
+    "nodes": [
+        {
+            "id": "bb96a1e3.2acc",
+            "type": "sqlite",
+            "z": "e9164206.d6a3e8",
+            "mydb": "b1d3d4e8.72da18",
+            "sqlquery": "fixed",
+            "sql": "select * from app_state;",
+            "name": "foo",
+            "x": 370,
+            "y": 180,
+            "wires": [
+                [
+                    "fd15e98d.58e2c8"
+                ]
+            ]
+        },
+        {
+            "id": "fd15e98d.58e2c8",
+            "type": "debug",
+            "z": "e9164206.d6a3e8",
+            "name": "",
+            "active": true,
+            "tosidebar": true,
+            "console": false,
+            "tostatus": false,
+            "complete": "false",
+            "x": 560,
+            "y": 180,
+            "wires": []
+        },
+        {
+            "id": "7ee8b774.4758b8",
+            "type": "inject",
+            "z": "e9164206.d6a3e8",
+            "name": "",
+            "topic": "",
+            "payload": "",
+            "payloadType": "date",
+            "repeat": "",
+            "crontab": "",
+            "once": false,
+            "onceDelay": 0.1,
+            "x": 200,
+            "y": 180,
+            "wires": [
+                [
+                    "bb96a1e3.2acc"
+                ]
+            ]
+        }
+    ]
+}
