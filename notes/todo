@@ -1,6 +1,7 @@
 
 hardware:
     look into ht1622 pin for data ctrl
+    find XCSOURCE XTM35SC manual for rs485 integration (modbus?)
 
 node-red:
     find/write driver for rs485

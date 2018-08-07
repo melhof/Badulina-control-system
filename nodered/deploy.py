@@ -1,6 +1,14 @@
+#! ../bin/python
+'''
+run with:
+    ./deploy.py push
+
+'''
+
+import sys
+import json
 
 import requests
-import json
 
 host = 'http://192.168.1.147:1880'
 
@@ -52,4 +60,25 @@ def push_relays():
     relays_id = '1dd2320a.7877fe'
     push(relays_id, flow)
 
+def pull_all():
+    pull_relays()
 
+def push_all():
+    push_relays()
+
+def main():
+    try:
+        cmd = sys.argv[1]
+        if cmd == 'pull':
+            print('pulling...')
+            pull_all()
+        elif cmd == 'push':
+            print('pushing...')
+            push_all()
+        else:
+            raise Exception()
+    except:
+        print('Usage: ./deploy.py pull')
+
+if __name__ == '__main__':
+    main()
