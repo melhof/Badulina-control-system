@@ -12,10 +12,10 @@
             "upload": false,
             "swaggerDoc": "",
             "x": 90,
-            "y": 120,
+            "y": 40,
             "wires": [
                 [
-                    "349d53e1.2f504c"
+                    "42ab81f3.e347"
                 ]
             ]
         },
@@ -51,9 +51,9 @@
             "fieldType": "msg",
             "format": "handlebars",
             "syntax": "mustache",
-            "template": "<html lang=\"en\">\n<head>\n    <title>Relays</title>\n    <ul>\n        <li><a href=\"/mod4ko\">relays</a></li>\n    </ul>\n</head>\n<body>\n  <h1>Relays</h1>\n  <form method=\"post\">\n    <ul>\n      mod4ko testing page relays etc\n      <li>\n        <button name=\"relay0\" value=\"{{flow.relay0}}\">\n          {{flow.relay0}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay1\" value=\"{{flow.relay1}}\">\n          {{flow.relay1}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay2\" value=\"{{flow.relay2}}\">\n          {{flow.relay2}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay3\" value=\"{{flow.relay3}}\">\n          {{flow.relay3}}\n        </button>\n      </li>\n    </ul>\n  </form>\n</body>\n</html>\n",
+            "template": "<html lang=\"en\">\n<head>\n    <title>Relays</title>\n    <ul>\n        <li><a href=\"/mod4ko\">relays</a></li>\n    </ul>\n</head>\n<body>\n  <h1>Relays</h1>\n  <form method=\"post\">\n    <ul>\n      mod4ko testing page relays etc\n      this should be just like the mod4ko panel of agua's /relays page\n      <li>\n        <button name=\"relay0\" value=\"{{flow.relays.0}}\">\n          {{flow.relays.0}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay1\" value=\"{{flow.relays.1}}\">\n          {{flow.relays.1}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay2\" value=\"{{flow.relays.2}}\">\n          {{flow.relays.2}}\n        </button>\n      </li>\n      <li>\n        <button name=\"relay3\" value=\"{{flow.relays.3}}\">\n          {{flow.relays.3}}\n        </button>\n      </li>\n    </ul>\n  </form>\n</body>\n</html>\n",
             "output": "str",
-            "x": 500,
+            "x": 580,
             "y": 40,
             "wires": [
                 [
@@ -74,76 +74,8 @@
             "y": 160,
             "wires": [
                 [
-                    "ea27a484.2695d"
-                ]
-            ]
-        },
-        {
-            "id": "93253ea6.1bac4",
-            "type": "http in",
-            "z": "1dd2320a.7877fe",
-            "name": "",
-            "url": "mod4ko/reset",
-            "method": "get",
-            "upload": false,
-            "swaggerDoc": "",
-            "x": 90,
-            "y": 240,
-            "wires": [
-                [
-                    "1b38ce77.92a23a"
-                ]
-            ]
-        },
-        {
-            "id": "1b38ce77.92a23a",
-            "type": "change",
-            "z": "1dd2320a.7877fe",
-            "name": "",
-            "rules": [
-                {
-                    "t": "set",
-                    "p": "relay0",
-                    "pt": "flow",
-                    "to": "false",
-                    "tot": "bool"
-                },
-                {
-                    "t": "set",
-                    "p": "relay1",
-                    "pt": "flow",
-                    "to": "false",
-                    "tot": "bool"
-                },
-                {
-                    "t": "set",
-                    "p": "relay2",
-                    "pt": "flow",
-                    "to": "false",
-                    "tot": "bool"
-                },
-                {
-                    "t": "set",
-                    "p": "relay3",
-                    "pt": "flow",
-                    "to": "false",
-                    "tot": "bool"
-                }
-            ],
-            "action": "",
-            "property": "",
-            "from": "",
-            "to": "",
-            "reg": false,
-            "x": 120,
-            "y": 360,
-            "wires": [
-                [
-                    "349d53e1.2f504c",
-                    "5b66431e.ed5bb4",
-                    "6ea0a489.c159fc",
-                    "7b6d43a7.e8cd0c",
-                    "1d09667f.3af8e2"
+                    "ea27a484.2695d",
+                    "113722fa.e2b5d5"
                 ]
             ]
         },
@@ -157,7 +89,7 @@
                     "t": "set",
                     "p": "payload",
                     "pt": "msg",
-                    "to": "relay0",
+                    "to": "relays.0",
                     "tot": "flow"
                 }
             ],
@@ -184,7 +116,7 @@
                     "t": "set",
                     "p": "payload",
                     "pt": "msg",
-                    "to": "relay2",
+                    "to": "relays.2",
                     "tot": "flow"
                 }
             ],
@@ -211,7 +143,7 @@
                     "t": "set",
                     "p": "payload",
                     "pt": "msg",
-                    "to": "relay1",
+                    "to": "relays.1",
                     "tot": "flow"
                 }
             ],
@@ -238,7 +170,7 @@
                     "t": "set",
                     "p": "payload",
                     "pt": "msg",
-                    "to": "relay3",
+                    "to": "relays.3",
                     "tot": "flow"
                 }
             ],
@@ -295,11 +227,11 @@
             "id": "ea27a484.2695d",
             "type": "function",
             "z": "1dd2320a.7877fe",
-            "name": "toggle",
-            "func": "\nfunction toggle(name) {\n    if (msg.payload[name] === 'true') {\n        flow.set(name, false);\n    } else if (msg.payload[name] === 'false') {\n        flow.set(name, true);\n    }\n}\n\ntoggle('relay0');\ntoggle('relay1');\ntoggle('relay2');\ntoggle('relay3');\n\n\nreturn msg;",
+            "name": "update flow",
+            "func": "relays = flow.get('relays');\n\nfunction toggle(name,idx) {\n    if (msg.payload[name] === 'true') {\n        relays[idx] = false;\n    } else if (msg.payload[name] === 'false') {\n        relays[idx] = true;\n    }\n}\ntoggle('relay0',0);\ntoggle('relay1',1);\ntoggle('relay2',2);\ntoggle('relay3',3);\nflow.set('relays', relays);\n\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
-            "x": 250,
+            "x": 330,
             "y": 160,
             "wires": [
                 [
@@ -307,8 +239,7 @@
                     "6ea0a489.c159fc",
                     "349d53e1.2f504c",
                     "7b6d43a7.e8cd0c",
-                    "1d09667f.3af8e2",
-                    "e9e0e5d7.adf4d"
+                    "1d09667f.3af8e2"
                 ]
             ]
         },
@@ -317,14 +248,76 @@
             "type": "debug",
             "z": "1dd2320a.7877fe",
             "name": "",
-            "active": false,
+            "active": true,
             "tosidebar": true,
             "console": false,
             "tostatus": false,
-            "complete": "false",
-            "x": 590,
+            "complete": "true",
+            "x": 630,
             "y": 160,
             "wires": []
+        },
+        {
+            "id": "42ab81f3.e347",
+            "type": "sqlite",
+            "z": "1dd2320a.7877fe",
+            "mydb": "b1d3d4e8.72da18",
+            "sqlquery": "fixed",
+            "sql": "select is_on from relay where board='mod4ko';",
+            "name": "get relay states",
+            "x": 200,
+            "y": 100,
+            "wires": [
+                [
+                    "130dcef3.7bf5b9"
+                ]
+            ]
+        },
+        {
+            "id": "130dcef3.7bf5b9",
+            "type": "function",
+            "z": "1dd2320a.7877fe",
+            "name": "set state from db",
+            "func": "relays = [];\n\nfunction prep(idx) {\n    relays[idx] = msg.payload[idx].is_on == 1;\n}\nprep(0); prep(1); prep(2); prep(3);\nflow.set('relays', relays)\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 390,
+            "y": 100,
+            "wires": [
+                [
+                    "349d53e1.2f504c"
+                ]
+            ]
+        },
+        {
+            "id": "b2463422.a9d118",
+            "type": "sqlite",
+            "z": "1dd2320a.7877fe",
+            "mydb": "b1d3d4e8.72da18",
+            "sqlquery": "prepared",
+            "sql": "update relay\nset is_on = $state\nwhere idx = $idx\nand board = 'mod4ko';\n;",
+            "name": "update db",
+            "x": 290,
+            "y": 280,
+            "wires": [
+                []
+            ]
+        },
+        {
+            "id": "113722fa.e2b5d5",
+            "type": "function",
+            "z": "1dd2320a.7877fe",
+            "name": "prep sql query",
+            "func": "params = {};\nfunction toggle(name, idx) {\n    if (msg.payload[name] === 'true') {\n        params.$idx = idx;\n        params.$state = false;\n    } else if (msg.payload[name] === 'false') {\n        params.$idx = idx;\n        params.$state = true;\n    }\n}\ntoggle('relay0',0);\ntoggle('relay1',1);\ntoggle('relay2',2);\ntoggle('relay3',3);\nmsg.params = params;\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 120,
+            "y": 280,
+            "wires": [
+                [
+                    "b2463422.a9d118"
+                ]
+            ]
         }
     ]
 }
