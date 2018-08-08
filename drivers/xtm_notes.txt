@@ -1,0 +1,12 @@
+
+
+
+https://bg-etech.de/download/manual/SDM220ModbusEN.pdf
+http://megadevices.com.ua/wp-content/uploads/2016/06/SDM220Modbus_protocol_V1.1.pdf
+https://en.wikipedia.org/wiki/Modbus
+https://minimalmodbus.readthedocs.io/en/master/troubleshooting.html
+https://pymodbus.readthedocs.io/en/latest/readme.html
+https://github.com/riptideio/pymodbus/blob/master/pymodbus/client/sync.py
+https://stackoverflow.com/questions/17081442/python-modbus-library
+https://github.com/samuelphy/energy-meter-logger/blob/master/read_energy_meter.py
+

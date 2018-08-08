@@ -13,6 +13,7 @@ agua:
     only record sensor data while pump running
     manual pump activation has 1hr timer
 
+    (kmt read worked when properly terminated)
     power meters
         take off kmt
         only 1 meter

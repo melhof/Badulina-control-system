@@ -45,17 +45,15 @@ def stat(n):
     cmd = bytearray([0xFF, 0xa4, 0x00])
 
     GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
 
+    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
     rs.write(cmd)
     time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
+
     GPIO.output(DIR_RS485, RX)                # Set Direction Control to Rx
     return rs.read(n)
 
-
-
 import minimalmodbus
-
 def mmb(slave):
     instrument = minimalmodbus.Instrument('/dev/ttyS0', slave)
     instrument.serial.baudrate = 9600
@@ -71,50 +69,55 @@ def mmb(slave):
     return instrument
     #.serial.read_all()
 
+from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 def mb(addr, unit):
     modbus = ModbusClient(method='rtu', port='/dev/ttyS0', baudrate=9600, timeout=1)
     return modbus
     return modbus.read_input_registers(addr, unit=unit)
 
 
-def read_volts(modbus_id):
-        status = [0] * 2
-        tx_buf = [
-            modbus_id, #slave addr
-            4, #fn 
-            0,
-            0,
-            0,
-            2,
-            0x71, #CRC
-            0xcb,
-        ]
-        
-        rs485 = serial.Serial("/dev/ttyS0")
+def read_volts(modbus_id, cmd):
+    #cmd = '01 04 00 00 00 02 71 cb'
+    #cmd = '01 03 75 31 00 01 CF C9'
+    status = [0] * 2
+    tx_buf = [int(x,base=16) for x in cmd.split()]
 
-        GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
-        time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
+    foo = [
+        modbus_id, #slave addr
+        4, #fn 
+        0,
+        0,
+        0,
+        2,
+        0x71, #CRC
+        0xcb,
+    ]
+    
+    rs485 = serial.Serial("/dev/ttyS0")
 
-        rs485.write(bytearray(tx_buf))
+    GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
 
-        time.sleep(DIR_DELAY)                   # 50 mSec Delay to allow last byte of Checksum and character delay
-        GPIO.output(DIR_RS485, RX)                # Set Direction Control to Rx
+    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
+    rs485.write(bytearray(tx_buf))
+    time.sleep(DIR_DELAY)                   # 50 mSec Delay to allow last byte of Checksum and character delay
 
-        read_bytes = 7                          # Expected return bytes
-        rx_buf = []
-        for _ in range(read_bytes):
-            print(rx_buf)
-            rx_buf.append(rs485.read())
+    GPIO.output(DIR_RS485, RX)                # Set Direction Control to Rx
 
-        rs485.flushInput()                      # Flush the seriel Input buffer          
-        rs485.close()                           # Close the port
+    read_bytes = 7                          # Expected return bytes
+    rx_buf = []
+    for _ in range(read_bytes):
+        print(rx_buf)
+        rx_buf.append(rs485.read())
 
-        status[0] = _check_receive_buffer(rx_buf, read_bytes)
+    rs485.flushInput()                      # Flush the seriel Input buffer          
+    rs485.close()                           # Close the port
 
-        if status[0] == 0:                      # Temperature values in Deg C
-                status[1] = (rx_buf[3] << 8) + rx_buf[4]
-                
-        return status
+    status[0] = _check_receive_buffer(rx_buf, read_bytes)
+
+    if status[0] == 0:                      # Temperature values in Deg C
+            status[1] = (rx_buf[3] << 8) + rx_buf[4]
+            
+    return status
 
 # Calculate CRC16 Checksum
 def _crc16(data, no):
