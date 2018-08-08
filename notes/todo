@@ -13,8 +13,11 @@ agua:
     only record sensor data while pump running
     manual pump activation has 1hr timer
 
-    retry rs485 read
-        power meters
+    power meters
+        take off kmt
+        only 1 meter
+        test voltages / current
+        oscilloscope the payloads
 
 laptop:
     swap fn/ctrl keys?
