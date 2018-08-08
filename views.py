@@ -9,7 +9,7 @@ from sqlalchemy import desc
 from datetime import time
 
 from models import Relay, SensorReading, WateringEvent, AppState
-from agua import (
+from domain import (
     suspend, 
     resume,
     add_schedule,

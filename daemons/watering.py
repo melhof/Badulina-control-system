@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time
 
 from app import app
-from agua import apply_schedule
+from domain import apply_schedule
 
 def main():
     with app.app_context():

@@ -2,7 +2,7 @@
 '''
 This module composites the other layers:
     models
-    agua
+    domain
     views
     templates
 to form a fully functioning web application
@@ -46,7 +46,7 @@ app.add_url_rule(rule='/relays/', view_func=views.relays, methods=('GET', 'POST'
 app.add_url_rule(rule='/status/', view_func=views.status, methods=('GET', 'POST'))
 app.add_url_rule(rule='/schedule/', view_func=views.schedule, methods=('GET', 'POST'))
 
-from agua import agua_init 
+from domain import agua_init 
 app.cli.add_command(agua_init)
 
 if __name__ == '__main__':

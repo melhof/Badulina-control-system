@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import time
 
 from app import app
-from agua import record_flow_rate
+from domain import record_flow_rate
 
 def main():
     with app.app_context():
