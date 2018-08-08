@@ -263,7 +263,7 @@
             "z": "1dd2320a.7877fe",
             "mydb": "b1d3d4e8.72da18",
             "sqlquery": "fixed",
-            "sql": "select is_on from relay where board='mod4ko';",
+            "sql": "select is_on\nfrom relay\nwhere board = 'mod4ko'\n;",
             "name": "get relay states",
             "x": 200,
             "y": 100,

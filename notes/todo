@@ -1,17 +1,22 @@
 
+draw flowcharts of NR vs py relay page loads
+
 hardware:
     look into ht1622 pin for data ctrl
     find XCSOURCE XTM35SC manual for rs485 integration (modbus?)
 
 node-red:
-    find/write driver for rs485
+    find/write driver for rs485 (kmt)
 
 agua:
+    agua -> domain
+
     sensory history page
     only record sensor data while pump running
     manual pump activation has 1hr timer
 
-    retry rs485 read (& sunnyboy ctrl?)
+    retry rs485 read
+        power meters
 
 laptop:
     swap fn/ctrl keys?
