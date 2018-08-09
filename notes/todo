@@ -1,27 +1,21 @@
 
 hardware:
     look into ht1622 pin for data ctrl
-    find XCSOURCE XTM35SC manual for rs485 integration (modbus?)
+    find XCSOURCE XTM35SC manual
 
 node-red:
-    find/write driver for rs485 (kmt)
+    find/write driver for rs485/modbus
 
 agua:
-    agua -> domain
+    bulma style for status/schedule
 
     sensory history page
     only record sensor data while pump running
     manual pump activation has 1hr timer
 
     power meters
-        (kmt read worked when properly terminated)
-        pymodbus w/ tx/rx/sleep in subclass
-        disabled bluetooth w/ modbus libs
-        modbus w/ kmt
-        all 3 modbus (with or without kmt)
-
+        email widgetlords asking about modbus libs
         data_collector writing vals to db
-
 
 laptop:
     swap fn/ctrl keys?
