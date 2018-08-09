@@ -35,3 +35,5 @@ enable_uart=1
 dtoverlay=pi-spi
 dtoverlay=vpe-2701c
 
+dtoverlay=pi3-miniuart-bt #disable bluetooth for uart gpio (serial)
+
