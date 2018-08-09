@@ -12,6 +12,7 @@ agua:
     sensory history page
     only record sensor data while pump running
     manual pump activation has 1hr timer
+    always check kmt status
 
     power meters
         email widgetlords asking about modbus libs

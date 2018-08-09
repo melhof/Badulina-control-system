@@ -25,7 +25,7 @@ web framework: flask
     models: models.py
         python objects that encapsulate all application state
 
-    domain logic: agua.py
+    domain logic: domain.py
         all irrigation-specific system constraints
         synchronizes hardware drivers with model state
         
@@ -42,7 +42,12 @@ web framework: flask
         http://jinja.pocoo.org/docs/2.10/
 
     user interface:
-        plain html
+        plain html: page structure
         no interactivity (no javascript)
         no visual design (no Cascading Style Sheets (CSS))
 
+    interactivity:
+        javascript: refresh page every 10s
+
+    style:
+        css: painting and aligning page elements
