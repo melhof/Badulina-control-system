@@ -13,7 +13,6 @@ DIR_DELAY = 0.005       # Seconds Delay After Setting and Re-setting the Directi
 
 RX, TX = 0,1
 
-
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)         # Use RPi GPIO numbers
 GPIO.setup(DIR_RS485,GPIO.OUT) # RS485 DIR bit
