@@ -1,4 +1,6 @@
 
+https://www.hackster.io/samuelphy/energy-meter-logger-6a3468
+https://github.com/raspberrypi/linux/blob/rpi-4.1.y/arch/arm/boot/dts/overlays/README#L532
 
 
 https://bg-etech.de/download/manual/SDM220ModbusEN.pdf

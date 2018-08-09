@@ -13,12 +13,15 @@ agua:
     only record sensor data while pump running
     manual pump activation has 1hr timer
 
-    (kmt read worked when properly terminated)
     power meters
-        take off kmt
-        only 1 meter
-        test voltages / current
-        oscilloscope the payloads
+        (kmt read worked when properly terminated)
+        pymodbus w/ tx/rx/sleep in subclass
+        disabled bluetooth w/ modbus libs
+        modbus w/ kmt
+        all 3 modbus (with or without kmt)
+
+        data_collector writing vals to db
+
 
 laptop:
     swap fn/ctrl keys?
