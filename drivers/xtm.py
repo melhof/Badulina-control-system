@@ -1,125 +1,166 @@
 
+import time
+import struct
+
 import serial
 import RPi.GPIO as GPIO
-import time
+import minimalmodbus
+from pymodbus.client.sync import ModbusSerialClient
 
 size = 8
 
 BAUD_RATE = 9600
-TIME_OUT = 0.5            # Default Time Out for RDu Display to respond
+TIME_OUT = 0.5  # Default Time Out for RDu Display to respond
 
-DIR_RS485 = 25          # GPIO Pin used for RS485 Driver IC Direction Control (0=Rx, 1=Tx)
-DIR_DELAY = 0.005       # Seconds Delay After Setting and Re-setting the Direction GPIO Pin
+DIR_RS485 = 25  # GPIO Pin used for RS485 Driver IC Direction Control (0=Rx, 1=Tx)
+DIR_DELAY = 0.005  # Seconds Delay After Setting and Re-setting the Direction GPIO Pin
 
-RX, TX = 0,1
+RX, TX = 0, 1
 
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)         # Use RPi GPIO numbers
-GPIO.setup(DIR_RS485,GPIO.OUT) # RS485 DIR bit
-GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
+GPIO.setmode(GPIO.BCM)  # Use RPi GPIO numbers
+GPIO.setup(DIR_RS485, GPIO.OUT)  # RS485 DIR bit
+GPIO.output(DIR_RS485, TX)  # RS485 to transmit mode
 
-rs = serial.Serial('/dev/ttyS0')
+class ModbusClient(ModbusSerialClient):
+    #TODO try gpio pinsetting here to see if it works
+    def _send(self, *args, **kwargs):
+        super()._send(*args, **kwargs)
 
-def send(idx, relay_on):
-    cmd = bytearray([0xFF, idx+1, relay_on])
-    rs.write(cmd)
-    
-def turn_on(idx):
-    send(idx, True)
+    def _recv(self, *args, **kwargs):
+        super()._recv(*args, **kwargs)
 
-def turn_off(idx):
-    send(idx, False)
 
-def reset():
-    for i in range(size):
-        turn_off(i)
+def test_all(addr=30001):
+    cmd = '01 04 00 00 00 02 71 cb'  # read 30001
+    #'01 03 75 31 00 01 CF C9'
 
-rs = serial.Serial("/dev/ttyS0")
-def write(cmd):
-    GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
-    time.sleep(DIR_DELAY)                   # 50 mSec Delay to allow last byte of Checksum and character delay
-    rs.write(cmd)
+    #print(read_volts(1, cmd))
 
-def stat(n):
-    cmd = bytearray([0xFF, 0xa4, 0x00])
+    try:
+        print(mmb(1).read_float(addr))
+    except Exception as err:
+        print(err)
 
-    GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
+    time.sleep(1)
+    try:
+        print(mmb_serial(1, cmd))
+    except Exception as err:
+        print(err)
 
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
-    rs.write(cmd)
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
+    time.sleep(1)
+    print(mb().read_input_registers(addr, unit=1))
 
-    GPIO.output(DIR_RS485, RX)                # Set Direction Control to Rx
-    return rs.read(n)
 
-import minimalmodbus
 def mmb(slave):
+    print('minimalmodbus')
     instrument = minimalmodbus.Instrument('/dev/ttyS0', slave)
     instrument.serial.baudrate = 9600
     instrument.debug = True
     return instrument
-    GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
-    cmd = bytearray([0x01,0x03,0x75,0x31,0x00,0x01,0xCF,0xC9])
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
-    instrument.serial.write(cmd)
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
-    GPIO.output(DIR_RS485, RX)     # RS485 to transmit mode
-    print(instrument.serial.read_all())
-    return instrument
-    #.serial.read_all()
 
-from pymodbus.client.sync import ModbusSerialClient as ModbusClient
-def mb(addr, unit):
-    modbus = ModbusClient(method='rtu', port='/dev/ttyS0', baudrate=9600, timeout=1)
+
+def mmb_serial(slave, cmd):
+    instrument = mmb(slave)
+
+    GPIO.output(DIR_RS485, TX)
+
+    tx_buf = parse_cmd(cmd)
+
+    time.sleep(DIR_DELAY)
+    instrument.serial.write(tx_buf)
+    time.sleep(DIR_DELAY)
+    GPIO.output(DIR_RS485, RX)
+
+    return instrument.serial.read_all()
+
+
+def mb():
+    print('pymodbus:')
+    modbus = ModbusClient(
+        method='rtu', port='/dev/ttyS0', baudrate=9600, timeout=1)
+    modbus.connect()
     return modbus
-    return modbus.read_input_registers(addr, unit=unit)
 
 
-def read_volts(modbus_id, cmd):
-    #cmd = '01 04 00 00 00 02 71 cb'
-    #cmd = '01 03 75 31 00 01 CF C9'
-    status = [0] * 2
-    tx_buf = [int(x,base=16) for x in cmd.split()]
+def parse_cmd(cmd):
+    return [int(x, base=16) for x in cmd.split()]
 
-    foo = [
-        modbus_id, #slave addr
-        4, #fn 
-        0,
-        0,
-        0,
-        2,
-        0x71, #CRC
-        0xcb,
-    ]
-    
+def resp_to_float(resp):
+    buf = bytearray(resp[3:7])
+    floats = struct.unpack('>f', buf)
+    return floats[0]
+
+def getr(hi, low):
+    base = '01 04 {} {} 00 02'
+    high = hexify(hi)
+    low = hexify(low)
+    return read_float(base.format(high, low))
+
+def hexify(n):
+    return ("0x%0.2X" % n)[2:]
+
+def scan():
+    ret = []
+    for idx in range(0, 0xff, 2):
+         val = getr(idx)
+         if val != 0.0:
+             ret.append((idx, val)) 
+    return ret
+
+def sample(name):
+    ''' get param from electrical meter 1
+    '''
+    low = {
+        'volts' : 0 ,
+        'amps'  : 8 ,
+        'watts' : 18,
+        'pf'    : 42,
+        'hz'    : 54,
+    }
+    high = {
+        'kwh'   : 0 ,
+    }
+    if name in low:
+        value = getr(0, low[name])
+    elif name in high:
+        value = getr(1, high[name])
+    else:
+        raise Exception('bad name: {}!'.format(name))
+    return value
+
+def read_float(cmd):
+    tx_buf = parse_cmd(cmd)
+    errc = crc(bytearray(tx_buf)) 
+    for bit in errc:
+        tx_buf.append(bit)
+    print('tx: ',tx_buf)
+
     rs485 = serial.Serial("/dev/ttyS0")
+    rs485.timeout = .1
 
-    GPIO.output(DIR_RS485, TX)                # Set Direction Control to Tx
+    GPIO.output(DIR_RS485, TX)  # Set Direction Control to Tx
 
-    time.sleep(DIR_DELAY)                   # 10 mSec delay to settle TX Line
+    time.sleep(DIR_DELAY)  # 10 mSec delay to settle TX Line
     rs485.write(bytearray(tx_buf))
-    time.sleep(DIR_DELAY)                   # 50 mSec Delay to allow last byte of Checksum and character delay
+    time.sleep(
+        DIR_DELAY*10
+    )  # 50 mSec Delay to allow last byte of Checksum and character delay
 
-    GPIO.output(DIR_RS485, RX)                # Set Direction Control to Rx
+    GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
 
-    read_bytes = 7                          # Expected return bytes
-    rx_buf = []
-    for _ in range(read_bytes):
-        print(rx_buf)
-        rx_buf.append(rs485.read())
+    read_bytes = 9  # Expected return bytes
+    rx_buf = rs485.read(read_bytes)
 
-    rs485.flushInput()                      # Flush the seriel Input buffer          
-    rs485.close()                           # Close the port
+    rs485.flushInput()  # Flush the seriel Input buffer
+    rs485.close()  # Close the port
+    print('rx :',rx_buf)
 
-    status[0] = _check_receive_buffer(rx_buf, read_bytes)
+    return resp_to_float(rx_buf)
 
-    if status[0] == 0:                      # Temperature values in Deg C
-            status[1] = (rx_buf[3] << 8) + rx_buf[4]
-            
-    return status
-
-# Calculate CRC16 Checksum
 def _crc16(data, no):
+    ''' bytearray data, no bytes -> checksum
+    '''
     crc = 0xffff
     poly = 0xa001               # Polynomial used for Modbus RS485 applications
     temp = no
@@ -140,37 +181,11 @@ def _crc16(data, no):
 
     return crc & 0xffff                       
 
-
-def _check_receive_buffer(rx_buf, read_bytes):        
-
-        if len(rx_buf) == 5:                    # Check for "Exception" return from the Display
-                return rx_buf[2]                # Returnt he exception value
-
-        if len(rx_buf) != read_bytes:
-                return -1                       # Return -1 as a Com Error
-        
-        if len(rx_buf) == read_bytes:
-                # Verify Checksums
-                checksum_calc = _crc16(bytearray(rx_buf), (read_bytes - 2))
-                checksum_read = (rx_buf[read_bytes-1] << 8) + rx_buf[read_bytes-2]
-
-                if checksum_calc != checksum_read:
-                        return -2               # Checksum Error                
-
-        return 0
-
-
-def check_rs485_error(status):
-
-        if status == -1:
-            return "Com Error"
-
-        if status == -2:
-            return "Checksum Error"
-
-        if status > 0:
-            return "Modbus Exception Error "
-
-        return
-    
+def crc(buf):
+    '''compute 2 CRC bits from bytearray of 6 byte command
+    '''
+    checksum = _crc16(buf, 6)
+    hi = checksum & 0x00ff
+    lo = (checksum >> 8) & 0xff
+    return (hi, lo)
 
