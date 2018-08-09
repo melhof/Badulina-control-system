@@ -16,7 +16,6 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)         # Use RPi GPIO numbers
 GPIO.setup(DIR_RS485,GPIO.OUT) # RS485 DIR bit
 
-GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
 
 # kmt config
 ID = 4 # id select switch config
@@ -25,8 +24,8 @@ stat_byte = 0xA0
 byte1 = 0xFF
 
 def status():
-    rs = serial.Serial('/dev/ttyS0')
-    rs.timeout = 1
+    GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
+    rs = serial.Serial('/dev/ttyS0', timout=1)
 
     byte2 = stat_byte + ID
     byte3 = 0x00
@@ -37,12 +36,13 @@ def status():
 
     GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
     response = rs.read(8)
+    rs.close()
 
-    GPIO.output(DIR_RS485, TX)  # default RS485 to transmit mode
     return response
 
 def send(idx, relay_on):
-    rs = serial.Serial('/dev/ttyS0')
+    GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
+    rs = serial.Serial('/dev/ttyS0', timeout=1)
 
     id_offset = (ID - 1) * 8
     byte2 = idx + 1 + id_offset
@@ -50,6 +50,7 @@ def send(idx, relay_on):
 
     cmd = bytearray([byte1, byte2, byte3])
     rs.write(cmd)
+    rs.close()
     
 def turn_on(idx):
     send(idx, True)

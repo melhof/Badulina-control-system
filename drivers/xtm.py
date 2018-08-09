@@ -4,10 +4,7 @@ import struct
 
 import serial
 import RPi.GPIO as GPIO
-import minimalmodbus
-from pymodbus.client.sync import ModbusSerialClient
 
-size = 8
 
 BAUD_RATE = 9600
 TIME_OUT = 0.5  # Default Time Out for RDu Display to respond
@@ -20,95 +17,15 @@ RX, TX = 0, 1
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)  # Use RPi GPIO numbers
 GPIO.setup(DIR_RS485, GPIO.OUT)  # RS485 DIR bit
-GPIO.output(DIR_RS485, TX)  # RS485 to transmit mode
 
-class ModbusClient(ModbusSerialClient):
-    #TODO try gpio pinsetting here to see if it works
-    def _send(self, *args, **kwargs):
-        super()._send(*args, **kwargs)
+volts = lambda slave: sample(slave, 'volts')
+amps  = lambda slave: sample(slave, 'amps')
+watts = lambda slave: sample(slave, 'watts')
+pf    = lambda slave: sample(slave, 'pf')
+hz    = lambda slave: sample(slave, 'hz')
+kwh   = lambda slave: sample(slave, 'kwh')
 
-    def _recv(self, *args, **kwargs):
-        super()._recv(*args, **kwargs)
-
-
-def test_all(addr=30001):
-    cmd = '01 04 00 00 00 02 71 cb'  # read 30001
-    #'01 03 75 31 00 01 CF C9'
-
-    #print(read_volts(1, cmd))
-
-    try:
-        print(mmb(1).read_float(addr))
-    except Exception as err:
-        print(err)
-
-    time.sleep(1)
-    try:
-        print(mmb_serial(1, cmd))
-    except Exception as err:
-        print(err)
-
-    time.sleep(1)
-    print(mb().read_input_registers(addr, unit=1))
-
-
-def mmb(slave):
-    print('minimalmodbus')
-    instrument = minimalmodbus.Instrument('/dev/ttyS0', slave)
-    instrument.serial.baudrate = 9600
-    instrument.debug = True
-    return instrument
-
-
-def mmb_serial(slave, cmd):
-    instrument = mmb(slave)
-
-    GPIO.output(DIR_RS485, TX)
-
-    tx_buf = parse_cmd(cmd)
-
-    time.sleep(DIR_DELAY)
-    instrument.serial.write(tx_buf)
-    time.sleep(DIR_DELAY)
-    GPIO.output(DIR_RS485, RX)
-
-    return instrument.serial.read_all()
-
-
-def mb():
-    print('pymodbus:')
-    modbus = ModbusClient(
-        method='rtu', port='/dev/ttyS0', baudrate=9600, timeout=1)
-    modbus.connect()
-    return modbus
-
-
-def parse_cmd(cmd):
-    return [int(x, base=16) for x in cmd.split()]
-
-def resp_to_float(resp):
-    buf = bytearray(resp[3:7])
-    floats = struct.unpack('>f', buf)
-    return floats[0]
-
-def getr(hi, low):
-    base = '01 04 {} {} 00 02'
-    high = hexify(hi)
-    low = hexify(low)
-    return read_float(base.format(high, low))
-
-def hexify(n):
-    return ("0x%0.2X" % n)[2:]
-
-def scan():
-    ret = []
-    for idx in range(0, 0xff, 2):
-         val = getr(idx)
-         if val != 0.0:
-             ret.append((idx, val)) 
-    return ret
-
-def sample(name):
+def sample(slave, name):
     ''' get param from electrical meter 1
     '''
     low = {
@@ -122,12 +39,39 @@ def sample(name):
         'kwh'   : 0 ,
     }
     if name in low:
-        value = getr(0, low[name])
+        value = getr(slave, 0, low[name])
     elif name in high:
-        value = getr(1, high[name])
+        value = getr(slave, 1, high[name])
     else:
         raise Exception('bad name: {}!'.format(name))
     return value
+
+def getr(slave, hi, low):
+    base = '{} 04 {} {} 00 02'
+    high = hexify(hi)
+    low = hexify(low)
+    cmd = base.format(slave, high, low)
+    return read_float(cmd)
+
+def hexify(n):
+    return ("0x%0.2X" % n)[2:]
+
+def parse_cmd(cmd):
+    return [int(x, base=16) for x in cmd.split()]
+
+def resp_to_float(resp):
+    buf = bytearray(resp[3:7])
+    floats = struct.unpack('>f', buf)
+    return floats[0]
+
+def scan():
+    ret = []
+    for idx in range(0, 0xff, 2):
+         val = getr(idx)
+         if val != 0.0:
+             ret.append((idx, val)) 
+    return ret
+
 
 def read_float(cmd):
     tx_buf = parse_cmd(cmd)
