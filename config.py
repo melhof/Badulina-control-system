@@ -3,6 +3,7 @@ import os
 import getpass
 
 PI = getpass.getuser() == 'pi'
+SESSION_COOKIE_DOMAIN = False #avoid setting to SERVER_NAME (which is an IP)
 
 if PI:
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
@@ -16,3 +17,5 @@ else:
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = True # not really needed, just explicitly set to avoid warnings
+
+PI_IP = os.environ['PI_IP']

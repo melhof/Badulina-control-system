@@ -59,5 +59,4 @@ agua-deploy() {
     flask db upgrade
 
     sudo service agua start
-
 }

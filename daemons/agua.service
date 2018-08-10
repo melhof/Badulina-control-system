@@ -5,6 +5,7 @@ After=network.target
 [Service]
 User=pi
 ExecStart=/home/pi/Badulina-control-system/daemons/daemon_spawn.sh
+EnvironmentFile=/home/pi/.agua.env
 Restart=always
 RemainAfterExit=yes
 
