@@ -4,33 +4,23 @@ This module encapsulates domain logic:
     knowledge about irrigation hardware configuration
 '''
 
-import getpass
 from datetime import time
 
-import requests
+from config import PI
+
+if PI:
+    from drivers import kmt, mod4ko, mod8di
 
 from utils import now, signal_to_freq, signal_to_freq_empirical
 from models import (
     save,
-    create_tables,
     Relay,
     SensorReading,
     WateringEvent,
     AppState,
 )
 
-username = getpass.getuser()
-
-if username == 'pi':
-    from drivers import kmt, mod4ko, mod8di
-    PI = True
-    drivers = {
-        'kmt': kmt,
-        'mod4ko': mod4ko,
-    }
-else:
-    PI = False
-    drivers = ['kmt', 'mod4ko']
+RELAY_BOARDS = [('kmt', 8), ('mod4ko', 4)]
 
 def add_schedule(day, start, stop, valves):
     assert stop > start, 'START MUST PRECEDE STOP'
@@ -124,12 +114,6 @@ def melchiors_empirial_flowrate():
     rate = signal_to_freq_empirical(signal, actual)
     return rate
 
-def current_flow_rate():
-    '''get flow rate from node-red this should be in L/s'''
-    response= requests.get('http://192.168.1.147:1880/water_flow_rate/')
-    payload=response.json()
-    freq=payload['freq']
-    return freq 
 
 def record_flow_rate():
     time = now()
@@ -137,7 +121,8 @@ def record_flow_rate():
     if PI:
         rate = sample_flow_rate()
     else:
-        rate = current_flow_rate()
+        print('NOT PI: faking flow rate')
+        rate = 0
 
     SensorReading.create('mod8di', 0, rate, time)
     return
@@ -145,7 +130,12 @@ def record_flow_rate():
 def set_relay(board, idx, value):
     relay = Relay.query.filter_by(board=board, idx=idx).one()
     if PI:
-        drivers[board].send(idx, value)
+        if board == 'kmt':
+            kmt.send(idx, value)
+        elif board == 'mod4ko':
+            mod4ko.send(idx, value)
+        else:
+            raise Exception('unknown board {}!'.format(board))
     else:
         print('NOT PI: faking {}[{}] to {}'.format(board, idx, value))
     relay.update(is_on=value)
@@ -165,8 +155,8 @@ def resume():
 
 def reset():
     if PI:
-        for driver in drivers.values():
-            driver.reset()
+        kmt.reset()
+        mod4ko.reset()
     Relay.query.update(dict(is_on=False))
     WateringEvent.query.update(dict(in_progress=False))
     save()
@@ -176,7 +166,7 @@ def turn_pump_on():
     if not pump.is_on:
         assert Relay.query.filter_by(board='kmt', is_on=False).count() < 8
         if PI:
-            drivers['mod4ko'].turn_on(0)
+            mod4ko.turn_on(0)
         pump.update(is_on=True)
     return
 
@@ -184,7 +174,7 @@ def turn_pump_off():
     pump = Relay.query.filter_by(board='mod4ko', idx=0).one()
     if pump.is_on:
         if PI:
-            drivers['mod4ko'].turn_off(0)
+            mod4ko.turn_off(0)
         pump.update(is_on=False)
     return
 
@@ -192,7 +182,7 @@ def turn_valve_on(idx):
     valve = Relay.query.filter_by(board='kmt', idx=idx).one()
     if not valve.is_on:
         if PI:
-            drivers['kmt'].turn_on(idx)
+            kmt.turn_on(idx)
         valve.update(is_on=True)
     return
 
@@ -203,7 +193,7 @@ def turn_valve_off(idx):
         if pump.is_on:
             assert Relay.query.filter_by(board='kmt', is_on=False).count() < 7
         if PI:
-            drivers['kmt'].turn_off(idx)
+            kmt.turn_off(idx)
         valve.update(is_on=False)
     return
 
@@ -221,7 +211,7 @@ def agua_init():
     AppState.create(AppState.State.operational)
     SensorReading.create('mod8di', 0, 0, now())
 
-    for driver, size in [('kmt', 8), ('mod4ko', 4)]:
+    for driver, size in RELAY_BOARDS:
         for i in range(size):
             Relay.create(driver, i)
 

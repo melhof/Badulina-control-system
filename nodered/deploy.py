@@ -6,13 +6,26 @@ run with:
 '''
 
 import sys
+import os
 import json
 
 import requests
+ 
 
-host = 'http://192.168.1.147:1880'
+host = 'http://{}:1880'.format(os.environ['PI_IP'])
 
-url = host + '/{}'
+url = host + '/{}/'
+
+def current_flow_rate():
+    '''
+    example of getting flow rate from python
+    get flow rate from node-red:
+    this should be in L/s
+    '''
+    response = requests.get(url.format('water_flow_rate'))
+    payload = response.json()
+    freq = payload['freq']
+    return freq
 
 def list_flows():
     resp = requests.get(url.format('flows'))

@@ -28,12 +28,14 @@ agua-build() {
     python3 -m venv .
     source bin/activate
 
+    pip install --upgrade pip
     pip install -r requirements.txt 
+
+    # only needed on pi, will fail otherise:
     ln -s /usr/lib/python3/dist-packages/widgetlords lib/python3.5/site-packages/
     
-    flask db upgrade
-
-    flask agua_init
+    flask db upgrade # create db
+    flask agua_init # populate db
 
     sudo cp daemons/agua.service /etc/systemd/system/
     sudo systemctl enable agua.service

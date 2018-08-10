@@ -5,6 +5,9 @@ hardware:
 
 agua:
     bulma style for status/schedule
+    refactor rs485, modbus
+    post -> get redirect
+    write readme.md
 
     sensor history page
     only record sensor data while pump running

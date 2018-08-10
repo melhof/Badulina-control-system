@@ -7,9 +7,6 @@ This module composites the other layers:
     templates
 to form a fully functioning web application
 '''
-
-import os
-
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -20,15 +17,8 @@ from models import db
 
 import views
 
-os.environ['FLASK_ENV'] = 'development' # trigger debug mode for webserver
-os.environ['WERKZEUG_DEBUG_PIN'] = 'off' # no password for interactive web debugger console
-
 app = Flask(__name__)
-
-# set basic app config
-app.secret_key = '|1_CtCNnbJ%<F:oL' #randomly generated
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True #not really needed, just explicitly set to avoid warnings
+app.config.from_object('config')
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -50,4 +40,4 @@ from domain import agua_init
 app.cli.add_command(agua_init)
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5000) # run webserver
+    app.run()

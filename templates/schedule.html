@@ -25,8 +25,15 @@
         </tr>
         </thead>
         <tbody>
-        <form method="post">
         <tr>
+          <td>
+            {% if ERR %}
+              {{ERRMSG}}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+        <form method="post">
           <td>
             <select name="day">
               {% for day in schema.Days %}
@@ -110,7 +117,4 @@
         {% endfor %}
     </tbody>
     </table>
-    {% if ERR %}
-      {{ERRMSG}}
-    {% endif %}
 {% endblock %}
