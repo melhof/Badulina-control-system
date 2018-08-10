@@ -1,23 +1,18 @@
 
 hardware:
-    look into ht1622 pin for data ctrl
     find XCSOURCE XTM35SC manual
-
-node-red:
-    find/write driver for rs485/modbus
+    research pump level monitoring
 
 agua:
     bulma style for status/schedule
 
-    sensory history page
+    sensor history page
     only record sensor data while pump running
     manual pump activation has 1hr timer
     always check kmt status
 
+    analog input example
+
     power meters
         email widgetlords asking about modbus libs
         data_collector writing vals to db
-
-laptop:
-    swap fn/ctrl keys?
-
