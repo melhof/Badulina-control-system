@@ -3,7 +3,7 @@ Driver for Digiten Water Flow Sensor
 via widgetlords mod8di digital input
 '''
 
-import mod8di
+from . import mod8di
 from utils import offset
 
 CHANNEL = 0

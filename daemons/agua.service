@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=pi
-ExecStart=/home/pi/agua/daemons/daemon_spawn.sh
+ExecStart=/home/pi/Badulina-control-system/daemons/daemon_spawn.sh
 Restart=always
 RemainAfterExit=yes
 

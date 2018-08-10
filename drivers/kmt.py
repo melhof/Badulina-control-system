@@ -2,7 +2,7 @@
 Driver for KMTRonic RS485 Relay
 the board has 8 relays and a status command
 '''
-import rs485
+from . import rs485
 
 size = 8 # no. relays
 

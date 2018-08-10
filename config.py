@@ -16,5 +16,3 @@ else:
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = True # not really needed, just explicitly set to avoid warnings
-
-PI_IP = os.environ['PI_IP']

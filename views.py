@@ -20,7 +20,6 @@ from domain import (
     turn_pump_off,
     turn_valve_on,
     turn_valve_off,
-    current_flow_rate,
 )
 
 base_context = {
