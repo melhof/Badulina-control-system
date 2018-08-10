@@ -1,6 +1,29 @@
 '''
 Driver for KMTRonic RS485 Relay
 the board has 8 relays and a status command
+
+
+note: status seems quite buggy.
+maybe this is the modbus meters interfering??
+or electrical noise echoing back on wire???
+
+ie there are intermittent failures:
+
+In [83]: status()
+Out[83]: b'\x01\x00\x01\x00\x00\x00\x00\x00'
+
+In [84]: status()
+Out[84]: b'@@@@\x80\x80\x80\x00'
+
+In [85]: status()
+Out[85]: b'@@@@\x80\x80\x80\x00'
+
+In [86]: status()
+Out[86]: b'@@@@\x80\x80\x80\x00'
+
+In [87]: status()
+Out[87]: b'\x01\x00\x01\x00\x00\x00\x00\x00'
+
 '''
 from . import rs485
 
