@@ -9,9 +9,9 @@ from datetime import time
 from config import PI
 
 if PI:
-    from drivers import kmt, mod4ko, mod8di
+    from drivers import kmt, mod4ko, digiten
 
-from utils import now, signal_to_freq, signal_to_freq_empirical
+from utils import now
 from models import (
     save,
     Relay,
@@ -93,27 +93,15 @@ def start_watering(event):
         turn_valve_on(valve)
     turn_pump_on()
 
+
 def sample_flow_rate():
-    '''get flow rate from by sampling digital imput D1 in L/s'''
-    channel = 0
     sample_hz = 300
     n_seconds = 10
     n_samples = sample_hz * n_seconds
-    signal = mod8di.build(channel, sample_hz, n_samples)
-    raw = signal_to_freq(signal, sample_hz)
+    raw = digiten.flow_rate(sample_hz, n_samples)
     K = 1 # TODO: this parameter needs to be calibrated emperically
     value = raw * K
     return value
-
-def melchiors_empirial_flowrate():
-    channel = 0
-    sample_hz = 300
-    n_seconds = 10
-    n_samples = sample_hz * n_seconds
-    signal, actual = mod8di.build_with_timing(channel, sample_hz, n_samples)
-    rate = signal_to_freq_empirical(signal, actual)
-    return rate
-
 
 def record_flow_rate():
     time = now()
