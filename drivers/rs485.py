@@ -16,17 +16,19 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)         # Use RPi GPIO numbers
 GPIO.setup(DIR_RS485,GPIO.OUT) # RS485 DIR bit
 
-timeout = 1
+timeout = .1
 
-def write(buf):
-    rs = serial.Serial('/dev/ttyS0', timeout=timeout)
+rs = serial.Serial('/dev/ttyS0', timeout=timeout)
+
+def write(buf, delay=None):
     GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
     time.sleep(DIR_DELAY)
     rs.write(buf)
-    time.sleep(DIR_DELAY*len(buf))
+    if delay is None:
+        delay = len(buf)
+    time.sleep(DIR_DELAY * delay)
 
 def read(n_bytes):
-    rs = serial.Serial('/dev/ttyS0', timeout=timeout)
     GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
     response = rs.read(n_bytes)
     return response

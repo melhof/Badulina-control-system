@@ -4,7 +4,9 @@ https://github.com/raspberrypi/linux/blob/rpi-4.1.y/arch/arm/boot/dts/overlays/R
 
 
 https://bg-etech.de/download/manual/SDM220ModbusEN.pdf
+
 http://megadevices.com.ua/wp-content/uploads/2016/06/SDM220Modbus_protocol_V1.1.pdf
+
 https://en.wikipedia.org/wiki/Modbus
 https://minimalmodbus.readthedocs.io/en/master/troubleshooting.html
 https://pymodbus.readthedocs.io/en/latest/readme.html

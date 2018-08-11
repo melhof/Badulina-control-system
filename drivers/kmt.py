@@ -5,14 +5,6 @@ the board has 8 relays and a status command
 note: KMT status seems quite buggy
     (oscilloscope measures noisy response)
 
-ie there are intermittent failures:
-
-In [83]: status()
-Out[83]: b'\x01\x00\x01\x00\x00\x00\x00\x00'
-
-In [84]: status()
-Out[84]: b'@@@@\x80\x80\x80\x00'
-
 
 '''
 from . import rs485
@@ -24,30 +16,36 @@ ID = 4 # id-select-switches currently toggled for ID4
 stat_byte = 0xA0
 byte1 = 0xFF
 
-def robust_status():
+def status():
     '''
-    num tries needed:
-        min    : 1
-        mode   : 2
-        median : 6
-        mean   : 10
-        max    : 79
+    retry when dirty_status is bad
+    of 1000 tries:
+    994 were correct on second request
     '''
     n_tries = 100
     for _ in range(n_tries):
-        msg = status()
+        msg = dirty_status()
         is_boolean = all(bit in range(2) for bit in msg)
         is_byte = len(msg) == 8
         if is_byte and is_boolean:
             return msg
     raise Exception('cannot get it!')
 
-def status():
+def dirty_status():
+    '''
+    has intermittent failures:
+
+    In [83]: status()
+    Out[83]: b'\x01\x00\x01\x00\x00\x00\x00\x00'
+
+    In [84]: status()
+    Out[84]: b'@@@@\x80\x80\x80\x00'
+    '''
     byte2 = stat_byte + ID
     byte3 = 0x00
 
     cmd = bytearray([byte1, byte2, byte3])
-    rs485.write(cmd)
+    rs485.write(cmd, delay=1) # NOTE: delay is empirical from observed behavior
     response = rs485.read(8)
 
     return response
