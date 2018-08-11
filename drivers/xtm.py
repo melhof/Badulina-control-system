@@ -1,22 +1,7 @@
 
-import time
 import struct
 
-import serial
-import RPi.GPIO as GPIO
-
-
-BAUD_RATE = 9600
-TIME_OUT = 0.5  # Default Time Out for RDu Display to respond
-
-DIR_RS485 = 25  # GPIO Pin used for RS485 Driver IC Direction Control (0=Rx, 1=Tx)
-DIR_DELAY = 0.005  # Seconds Delay After Setting and Re-setting the Direction GPIO Pin
-
-RX, TX = 0, 1
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)  # Use RPi GPIO numbers
-GPIO.setup(DIR_RS485, GPIO.OUT)  # RS485 DIR bit
+import rs485
 
 volts = lambda slave: sample(slave, 'volts')
 amps  = lambda slave: sample(slave, 'amps')
@@ -80,27 +65,43 @@ def read_float(cmd):
         tx_buf.append(bit)
     print('tx: ',tx_buf)
 
-    rs485 = serial.Serial("/dev/ttyS0")
-    rs485.timeout = .1
-
-    GPIO.output(DIR_RS485, TX)  # Set Direction Control to Tx
-
-    time.sleep(DIR_DELAY)  # 10 mSec delay to settle TX Line
-    rs485.write(bytearray(tx_buf))
-    time.sleep(
-        DIR_DELAY*10
-    )  # 50 mSec Delay to allow last byte of Checksum and character delay
-
-    GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
+    rs485.write(tx_buf)
 
     read_bytes = 9  # Expected return bytes
     rx_buf = rs485.read(read_bytes)
 
-    rs485.flushInput()  # Flush the seriel Input buffer
-    rs485.close()  # Close the port
     print('rx :',rx_buf)
 
     return resp_to_float(rx_buf)
+
+#def read_float_orig(cmd):
+    #tx_buf = parse_cmd(cmd)
+    #errc = crc(bytearray(tx_buf)) 
+    #for bit in errc:
+        #tx_buf.append(bit)
+    #print('tx: ',tx_buf)
+
+    #rs485 = serial.Serial("/dev/ttyS0")
+    #rs485.timeout = .1
+
+    #GPIO.output(DIR_RS485, TX)  # Set Direction Control to Tx
+
+    #time.sleep(DIR_DELAY)  # 10 mSec delay to settle TX Line
+    #rs485.write(bytearray(tx_buf))
+    #time.sleep(
+        #DIR_DELAY*10
+    #)  # 50 mSec Delay to allow last byte of Checksum and character delay
+
+    #GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
+
+    #read_bytes = 9  # Expected return bytes
+    #rx_buf = rs485.read(read_bytes)
+
+    #rs485.flushInput()  # Flush the seriel Input buffer
+    #rs485.close()  # Close the port
+    #print('rx :',rx_buf)
+
+    #return resp_to_float(rx_buf)
 
 def _crc16(data, no):
     ''' bytearray data, no bytes -> checksum

@@ -16,47 +16,18 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)         # Use RPi GPIO numbers
 GPIO.setup(DIR_RS485,GPIO.OUT) # RS485 DIR bit
 
-ID = 4 # id-select-switches currently toggled for ID4
-
-stat_byte = 0xA0
-byte1 = 0xFF
-
 timeout = 1
 
 def write(buf):
     rs = serial.Serial('/dev/ttyS0', timeout=timeout)
     GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
+    time.sleep(DIR_DELAY)
     rs.write(buf)
+    time.sleep(DIR_DELAY*len(buf))
 
 def read(n_bytes):
     rs = serial.Serial('/dev/ttyS0', timeout=timeout)
     GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
     response = rs.read(n_bytes)
-    return response
-
-from drivers.xtm import crc
-
-def status():
-    GPIO.output(DIR_RS485, TX)     # RS485 to transmit mode
-    rs = serial.Serial('/dev/ttyS0', timeout=timeout)
-    time.sleep(DIR_DELAY)
-
-    stat_byte = 0xA0
-    cmd = [0] * 6
-    cmd[0] = 0xFF
-    cmd[1] = stat_byte + ID
-    cmd[2] = 0x00
-
-    errc = crc(bytearray(cmd)) 
-    for bit in errc:
-        cmd.append(bit)
-
-    cmd = bytearray(cmd)
-
-    rs.write(cmd)
-    time.sleep(DIR_DELAY)
-
-    GPIO.output(DIR_RS485, RX)  # Set Direction Control to Rx
-    response = rs.read(8)
     return response
 
