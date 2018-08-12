@@ -38,11 +38,12 @@ def index():
 
 def history():
 
-    context = {}
+    context = {
+        'readings' : SensorReading.query.all(),
+        'schema': SensorReading,
+    }
     
     context.update(base_context)
-
-    context['readings'] = SensorReading.query.all()
 
     return render_template('history.html', **context)
 

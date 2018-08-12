@@ -2,12 +2,46 @@
 {% block title %}History{% endblock %}
 {% block content %}
   <h1>History</h1>
-    <ul>
-    {% for reading in readings %}
-      <li>
-          <div><b>{{ reading.data }}</b> L/sec at <i>{{ reading.time.strftime('%m/%d/%Y %H:%M') }}</i></div>
-        </li>
-      {% endfor %}
-    </ul>
+    <table >
+        <thead>
+          <tr>
+            <td>
+                Flow (L/s)
+            </td> 
+            <td>
+                Valves:
+            </td> 
+            {% for valve in schema.Valves %}
+              <td>
+                {{valve + 1}}
+              </td>
+            {% endfor %}
 
+            <td>
+                Time
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reading in readings %}
+          <tr>
+            <td>
+            {{ reading.data }}
+            </td>
+            <td>
+            </td>
+            {% for valve in schema.Valves %}
+              <td>
+              <div>
+                  <input type="checkbox" disabled="disabled" {{ 'checked' if valve in reading.valves else '' }}/>
+              </div>
+              </td>
+            {% endfor %}
+            <td>
+            {{ reading.time.strftime('%m/%d/%Y %H:%M') }}
+            </td>
+          </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 {% endblock %}

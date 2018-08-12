@@ -85,6 +85,8 @@ class Relay(AguaModel):
         return
 
 class SensorReading(AguaModel):
+    Valves = range(8)
+
     id = db.Column(db.Integer, primary_key=True)
     board = db.Column(db.String(10))
     idx = db.Column(db.Integer)
