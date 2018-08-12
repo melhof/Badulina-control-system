@@ -16,6 +16,9 @@
             Last Day Water
             {{totaldayagua | int}}
             <td>
+                Time
+            </td>
+            <td>
                 Flow (L/min)
             </td> 
             <td>
@@ -27,14 +30,14 @@
               </td>
             {% endfor %}
 
-            <td>
-                Time
-            </td>
         </tr>
         </thead>
         <tbody>
         {% for reading in readings %}
           <tr>
+            <td>
+            {{ reading.time.strftime('%m/%d/%Y %H:%M') }}
+            </td>
             <td>
             {{ reading.data | int}}
             </td>
@@ -47,9 +50,6 @@
               </div>
               </td>
             {% endfor %}
-            <td>
-            {{ reading.time.strftime('%m/%d/%Y %H:%M') }}
-            </td>
           </tr>
         {% endfor %}
     </tbody>
