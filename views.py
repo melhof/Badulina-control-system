@@ -6,8 +6,9 @@ This module encapsulates webserver logic:
 '''
 from flask import render_template, request, redirect, url_for
 from sqlalchemy import desc
-from datetime import time
+from datetime import time, timedelta
 
+from utils import now
 from models import Relay, SensorReading, WateringEvent, AppState
 from domain import (
     RELAY_BOARDS,
@@ -37,10 +38,16 @@ def index():
     return redirect(url_for('status'))
 
 def history():
+    day_ago = now() - timedelta(days=1)
+    last_day = SensorReading.query.filter(
+        SensorReading.time > day_ago
+    ).all()
+
+    day_total = sum(reading.data for reading in last_day)
 
     context = {
         'schema': SensorReading,
-        'totaldayagua' : SensorReading.query.all(),
+        'totaldayagua' : day_total,
         'readings': SensorReading.query.order_by(desc('time')).all(),
     }
     
