@@ -39,9 +39,9 @@ def index():
 def history():
 
     context = {
-        'readings' : SensorReading.query.all(),
         'schema': SensorReading,
         'totaldayagua' : SensorReading.query.all(),
+        'readings': SensorReading.query.order_by(desc('time')).all(),
     }
     
     context.update(base_context)
