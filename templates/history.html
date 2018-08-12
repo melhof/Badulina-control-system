@@ -19,9 +19,6 @@
                 Time
             </td>
             <td>
-                Flow (L/min)
-            </td> 
-            <td>
                 Valves:
             </td> 
             {% for valve in schema.Valves %}
@@ -29,6 +26,9 @@
                 {{valve + 1}}
               </td>
             {% endfor %}
+            <td>
+                Flow (L/min)
+            </td> 
 
         </tr>
         </thead>
@@ -39,9 +39,6 @@
             {{ reading.time.strftime('%m/%d/%Y %H:%M') }}
             </td>
             <td>
-            {{ reading.data | int}}
-            </td>
-            <td>
             </td>
             {% for valve in schema.Valves %}
               <td>
@@ -50,6 +47,9 @@
               </div>
               </td>
             {% endfor %}
+            <td>
+            {{ reading.data | int}}
+            </td>
           </tr>
         {% endfor %}
     </tbody>
