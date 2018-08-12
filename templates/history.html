@@ -13,8 +13,9 @@
     <table >
         <thead>
           <tr>
-            Water per day {{ reading.data}} L
-
+            <td>
+              Water per day {{ reading.data | int }} L
+            </td>
             <td>
                 Flow (L/min)
             </td> 
