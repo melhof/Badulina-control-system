@@ -5,7 +5,6 @@ hardware:
 
 agua:
     bulma style for status/schedule
-    refactor rs485, modbus
     write readme.md
 
     sensor history page
