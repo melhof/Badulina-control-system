@@ -14,7 +14,7 @@
     {% if modified  %}
     <div>System has been manually altered.</div><br/>
     {% endif %}
-    <div>Python: Last Recorded water flow in DB  was <b>{{ last_flow.data }}</b> L/sec at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i> [this needs to be calibrated by K emperically]</div>
+    <div>Python: Last Recorded water flow in DB  was <b>{{ last_flow.data | int }}</b> L/min at <i>{{ last_flow.time.strftime('%m/%d/%Y %H:%M') }}</i> [this needs to be calibrated by K emperically]</div>
     <br/>
     {% if ERR %}
     <div>NO PUMP WITH CLOSED VALVES!</div>
