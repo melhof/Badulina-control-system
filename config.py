@@ -14,6 +14,7 @@ if PI:
     DEBUG = False
     SERVER_NAME = '{}:5000'.format(PI_IP)
 else:
+    SECRET_KEY = 'not a secrect'
     ENV = 'development'
     DEBUG = True
     SERVER_NAME = 'localhost:5000'

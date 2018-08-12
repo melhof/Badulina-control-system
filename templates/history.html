@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+  <h1>History</h1>
+    <ul>
+    {% for reading in readings %}
+      <li>
+          <div><b>{{ reading.data }}</b> L/sec at <i>{{ reading.time.strftime('%m/%d/%Y %H:%M') }}</i></div>
+        </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}

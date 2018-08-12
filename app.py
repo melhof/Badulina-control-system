@@ -35,6 +35,7 @@ app.add_url_rule(rule='/', view_func=views.index)
 app.add_url_rule(rule='/relays/', view_func=views.relays, methods=('GET', 'POST'))
 app.add_url_rule(rule='/status/', view_func=views.status, methods=('GET', 'POST'))
 app.add_url_rule(rule='/schedule/', view_func=views.schedule, methods=('GET', 'POST'))
+app.add_url_rule(rule='/history/', view_func=views.history, methods=('GET', 'POST'))
 
 from domain import agua_init 
 app.cli.add_command(agua_init)

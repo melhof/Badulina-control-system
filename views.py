@@ -31,8 +31,21 @@ base_context = {
         'history',
     ],
 }
+
+
 def index():
     return redirect(url_for('status'))
+
+def history():
+
+    context = {}
+    
+    context.update(base_context)
+
+    context['readings'] = SensorReading.query.all()
+
+    return render_template('history.html', **context)
+
 
 def relays():
     if request.method == 'POST':
