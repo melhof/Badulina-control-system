@@ -95,13 +95,18 @@ def start_watering(event):
 
 
 def sample_flow_rate():
+    '''
+    take samples hz at n
+    devide by 2 magnets / rotation
+    calibration factor is K
+    '''
+    K = 1
     sample_hz = 300
     n_seconds = 10
     n_samples = sample_hz * n_seconds
-    raw = digiten.flow_rate(sample_hz, n_samples)
-    K = 1 # TODO: this parameter needs to be calibrated emperically
-    value = raw * K
-    return value
+    freq = digiten.flow_rate(sample_hz, n_samples)
+    value = freq / 2
+    return value * K
 
 def record_flow_rate():
     pump = Relay.query.filter_by(board='mod4ko', idx=0).one()

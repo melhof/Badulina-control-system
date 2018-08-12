@@ -13,11 +13,9 @@ def flow_rate(sample_hz, n_samples):
     build signal with perf timing
     calc realstic freq
     '''
-    K = 1
     signal, actual = mod8di.build_with_timing(CHANNEL, sample_hz, n_samples)
     freq = idx_to_freq_empirical(signal, actual)
-    value = freq / 2
-    return value * K
+    return freq
 
 def idx_to_freq_empirical(signal, actual):
     idx = get_idx(signal)
