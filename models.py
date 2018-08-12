@@ -88,12 +88,23 @@ class SensorReading(AguaModel):
     id = db.Column(db.Integer, primary_key=True)
     board = db.Column(db.String(10))
     idx = db.Column(db.Integer)
-    data = db.Column(db.Integer)
+    data = db.Column(db.Float)
     time = db.Column(db.DateTime)
+    valves_ = db.Column(db.String(10))
+
+    @property
+    def valves(self):
+        return [int(valve) for valve in self.valves_]
 
     @classmethod
-    def create(cls, board, idx, data, time):
-        record = cls(board=board, idx=idx, data=data, time=time)
+    def create(cls, board, idx, data, time, valves):
+        record = cls(
+            board=board,
+            idx=idx,
+            data=data,
+            time=time,
+            valves_=''.join(map(str, valves)),
+        )
         record.insert()
         return
 

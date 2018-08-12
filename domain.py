@@ -104,6 +104,10 @@ def sample_flow_rate():
     return value
 
 def record_flow_rate():
+    pump = Relay.query.filter_by(board='mod4ko', idx=0).one()
+    if not pump.is_on:
+        return
+
     time = now()
 
     if PI:
@@ -112,7 +116,11 @@ def record_flow_rate():
         print('NOT PI: faking flow rate')
         rate = 0
 
-    SensorReading.create('mod8di', 0, rate, time)
+    valves = []
+    for valve in Relay.query.filter_by(board='kmt', is_on=True).all():
+        valves.append(valve.idx)
+
+    SensorReading.create('mod8di', 0, rate, time, valves)
     return
 
 def set_relay(board, idx, value):

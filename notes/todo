@@ -8,7 +8,7 @@ agua:
     write readme.md
 
     sensor history page
-    only record sensor data while pump running
+    
     manual pump activation has 1hr timer
     always check kmt status
     fountain DI input button 30sec pump+valve on

@@ -6,3 +6,4 @@ lib64
 pip-selfcheck.json
 pyvenv.cfg
 db.sqlite
+share
