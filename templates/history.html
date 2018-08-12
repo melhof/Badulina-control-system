@@ -14,7 +14,7 @@
         <thead>
           <tr>
             Last Day Water
-            {{totaldayagua}}
+            {{totaldayagua | int}}
             <td>
                 Flow (L/min)
             </td> 
@@ -36,7 +36,7 @@
         {% for reading in readings %}
           <tr>
             <td>
-            {{ reading.data | int }}
+            {{ reading.data | int}}
             </td>
             <td>
             </td>
