@@ -41,6 +41,7 @@ def history():
     context = {
         'readings' : SensorReading.query.all(),
         'schema': SensorReading,
+        'totaldayagua' : SensorReading.query.all(),
     }
     
     context.update(base_context)
