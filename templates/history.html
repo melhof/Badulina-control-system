@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block title %}History{% endblock %}
 {% block content %}
- <script>
-        function reload() {
-            window.location.href = window.location.href;
-        }
-        var secs = 10;
-        var ms = 1000 * secs;
-        setInterval(reload, ms);
-    </script>
+# <script>
+#        function reload() {
+#            window.location.href = window.location.href;
+#        }
+#        var secs = 10;
+#        var ms = 1000 * secs;
+#        setInterval(reload, ms);
+#    </script>
   <h1>History</h1>
     <table >
         <thead>
@@ -26,6 +26,8 @@
                 {{valve + 1}}
               </td>
             {% endfor %}
+            <td>
+            </td>
             <td>
                 Flow (L/min)
             </td> 
@@ -47,6 +49,8 @@
               </div>
               </td>
             {% endfor %}
+            <td>
+            </td>
             <td>
             {{ reading.data | int}}
             </td>
