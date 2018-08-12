@@ -15,8 +15,8 @@ from domain import record_flow_rate
 def main():
     with app.app_context():
         while True:
-            record_flow_rate()
-            time.sleep(1)
+            record_flow_rate() # ~10s
+            time.sleep(50)
 
 if __name__ == '__main__':
     main()

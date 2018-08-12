@@ -9,14 +9,17 @@ from utils import offset
 CHANNEL = 0
 
 def flow_rate(sample_hz, n_samples):
-    '''get flow rate from by sampling digital imput D1 in L/s'''
-    signal = mod8di.build(CHANNEL, sample_hz, n_samples)
-    raw = signal_to_freq(signal, sample_hz)
-    return raw
+    '''
+    build signal with perf timing
+    calc realstic freq
+    '''
+    signal, actual = mod8di.build_with_timing(CHANNEL, sample_hz, n_samples)
+    rate = idx_to_freq_empirical(signal, actual)
+    return rate
 
-def signal_to_freq(signal, hz):
+def idx_to_freq_empirical(signal, actual):
     idx = get_idx(signal)
-    return idx_to_freq(idx, hz)
+    return len(idx) / actual
 
 def get_idx(signal):
     '''
@@ -32,8 +35,21 @@ def get_idx(signal):
             idx.append(i)
     return idx
 
-def idx_to_freq(idx, hz):
-    ''' compute freq by taking mean period length in sample
+
+### OTHER STRATEGY (first attempted)
+
+def flow_rate_naive(sample_hz, n_samples):
+    '''
+    get flow rate from by sampling digital imput D1 in L/s
+    '''
+    signal = mod8di.build(CHANNEL, sample_hz, n_samples)
+    idx = get_idx(signal, sample_hz)
+    raw = idx_to_freq_mean_periods(idx, sample_hz)
+    return raw
+
+def idx_to_freq_mean_periods(idx, hz):
+    '''
+    compute freq by taking mean period length in sample
     '''
     diff = [b-a for a,b in offset(idx)]
     if diff:
@@ -41,14 +57,3 @@ def idx_to_freq(idx, hz):
         return hz / mean
     else:
         return 0
-
-# NEXT VERSION:
-def melchiors_empirical_flowrate(sample_hz, n_samples):
-    # TODO melchior, test this for calibration
-    signal, actual = mod8di.build_with_timing(CHANNEL, sample_hz, n_samples)
-    rate = signal_to_freq_empirical(signal, actual)
-    return rate
-
-def signal_to_freq_empirical(signal, actual):
-    idx = get_idx(signal)
-    return len(idx) / actual
