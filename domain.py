@@ -210,7 +210,7 @@ def agua_init():
     '''
 
     AppState.create(AppState.State.operational)
-    SensorReading.create('mod8di', 0, 0, now())
+    SensorReading.create('mod8di', 0, 0, now(), [0])
 
     for driver, size in RELAY_BOARDS:
         for i in range(size):
