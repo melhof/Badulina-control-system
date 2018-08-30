@@ -76,7 +76,7 @@ class Relay(AguaModel):
     id = db.Column(db.Integer, primary_key=True)
     board = db.Column(db.String(10))
     idx = db.Column(db.Integer)
-    is_on = db.Column(db.Boolean)
+    is_on = db.Column(db.Boolean, default=False)
 
     @classmethod
     def create(cls, board, idx):
